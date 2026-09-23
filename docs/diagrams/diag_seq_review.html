@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>
+mermaid.initialize({
+    startOnLoad: true,
+    theme: 'base',
+    themeVariables: {
+        primaryColor: '#1E3A8A',
+        primaryTextColor: '#FFFFFF',
+        primaryBorderColor: '#1E3A8A',
+        lineColor: '#2563EB',
+        secondaryColor: '#F1F5F9',
+        tertiaryColor: '#FFFFFF'
+    }
+});
+</script>
+<style>
+  body {
+      background: white;
+      margin: 0;
+      padding: 20px;
+      display: inline-block;
+  }
+  .mermaid {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+</style>
+</head>
+<body>
+<div class="mermaid">
+sequenceDiagram
+    autonumber
+    actor Wabup as Wakil Bupati
+    participant Dash as Executive Dashboard
+    participant Viewer as In-App PDF Viewer
+    participant Engine as Decision Engine
+    actor Pengusul as Pengusul
+
+    Wabup->>Dash: Login ke Portal Eksekutif (Tablet / Ponsel)
+    Dash-->>Wabup: Menampilkan Daftar Antrean Proposal Masuk
+    Wabup->>Dash: Klik Kartu Proposal untuk Membuka Detail
+    Dash->>Viewer: Buka Dokumen Proposal PDF Secara Langsung di Layar
+    Wabup->>Viewer: Telaah Profil, Anggaran RAB, dan Berkas Pendukung
+    alt Keputusan: DISETUJUI
+        Wabup->>Engine: Klik Tombol Hijau "DISETUJUI" + Catatan Apresiasi
+        Engine->>Engine: Terbitkan Nomor Disposisi & QR Code Validasi
+    else Keputusan: PERLU PERBAIKAN
+        Wabup->>Engine: Klik Tombol Kuning "PERLU PERBAIKAN" + Input Catatan Revisi Wajib
+        Engine->>Engine: Ubah Status Menjadi NEEDS_REVISION & Buka Izin Edit Pengusul
+    else Keputusan: TIDAK DISETUJUI
+        Wabup->>Engine: Klik Tombol Merah "TIDAK DISETUJUI" + Input Alasan Penolakan
+        Engine->>Engine: Ubah Status Menjadi REJECTED & Kunci Proposal Permanen
+    end
+    Engine-->>Pengusul: Kirim Notifikasi WhatsApp & Email Real-Time Hasil Keputusan
+</div>
+</body>
+</html>

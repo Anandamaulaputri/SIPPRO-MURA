@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>
+mermaid.initialize({
+    startOnLoad: true,
+    theme: 'base',
+    themeVariables: {
+        primaryColor: '#1E3A8A',
+        primaryTextColor: '#FFFFFF',
+        primaryBorderColor: '#1E3A8A',
+        lineColor: '#2563EB',
+        secondaryColor: '#F1F5F9',
+        tertiaryColor: '#FFFFFF'
+    }
+});
+</script>
+<style>
+  body {
+      background: white;
+      margin: 0;
+      padding: 20px;
+      display: inline-block;
+  }
+  .mermaid {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+</style>
+</head>
+<body>
+<div class="mermaid">
+stateDiagram-v2
+    [*] --> DRAFT : Pengusul Membuat Proposal
+    DRAFT --> DIAJUKAN : Lolos Checklist Ketelitian Mandiri (v1.0)
+    DIAJUKAN --> DISETUJUI : Disetujui oleh Wakil Bupati
+    DIAJUKAN --> DITOLAK : Ditolak oleh Wakil Bupati
+    DIAJUKAN --> PERLU_PERBAIKAN : Wakil Bupati Meminta Perbaikan + Catatan
+    PERLU_PERBAIKAN --> DIAJUKAN : Pengusul Resubmit Berkas Revisi (v2.0)
+    DISETUJUI --> SELESAI : Terbit Lembar Disposisi Resmi
+    DITOLAK --> [*] : Berkas Diarsipkan
+    SELESAI --> [*] : Proses Selesai
+</div>
+</body>
+</html>

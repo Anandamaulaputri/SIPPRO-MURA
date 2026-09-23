@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>
+mermaid.initialize({
+    startOnLoad: true,
+    theme: 'base',
+    themeVariables: {
+        primaryColor: '#1E3A8A',
+        primaryTextColor: '#FFFFFF',
+        primaryBorderColor: '#1E3A8A',
+        lineColor: '#2563EB',
+        secondaryColor: '#F1F5F9',
+        tertiaryColor: '#FFFFFF'
+    }
+});
+</script>
+<style>
+  body {
+      background: white;
+      margin: 0;
+      padding: 20px;
+      display: inline-block;
+  }
+  .mermaid {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+</style>
+</head>
+<body>
+<div class="mermaid">
+pie title Sasaran Efisiensi Operasional SIPPRO
+    "Penurunan Angka Revisi Berulang (<= 1 kali)" : 40
+    "Percepatan Waktu Penilaian (SLA < 3 Hari)" : 30
+    "Kepuasan Akses Transparansi Pengusul (100%)" : 20
+    "Eliminasi Kehilangan Berkas Fisik (0 Kasus)" : 10
+</div>
+</body>
+</html>

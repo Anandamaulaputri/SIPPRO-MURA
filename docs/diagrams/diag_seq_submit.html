@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>
+mermaid.initialize({
+    startOnLoad: true,
+    theme: 'base',
+    themeVariables: {
+        primaryColor: '#1E3A8A',
+        primaryTextColor: '#FFFFFF',
+        primaryBorderColor: '#1E3A8A',
+        lineColor: '#2563EB',
+        secondaryColor: '#F1F5F9',
+        tertiaryColor: '#FFFFFF'
+    }
+});
+</script>
+<style>
+  body {
+      background: white;
+      margin: 0;
+      padding: 20px;
+      display: inline-block;
+  }
+  .mermaid {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+</style>
+</head>
+<body>
+<div class="mermaid">
+sequenceDiagram
+    autonumber
+    actor Pengusul
+    participant Web as Antarmuka SIPPRO
+    participant Gatekeeper as Modul Checklist Ketelitian
+    participant Server as Backend API & DB
+    actor Wabup as Wakil Bupati
+
+    Pengusul->>Web: Isi Form Usulan, Kategori, & Tabel RAB
+    Pengusul->>Web: Unggah File Proposal (PDF) & Berkas Pendukung
+    Pengusul->>Web: Klik Tombol "Lanjut ke Pengiriman"
+    Web->>Gatekeeper: Buka Modal Verifikasi Ketelitian Mandiri
+    Note over Pengusul,Gatekeeper: Pengusul wajib memeriksa & mencentang 6 butir verifikasi mandiri
+    Pengusul->>Gatekeeper: Centang Seluruh 6 Butir Checklist Integritas
+    Gatekeeper-->>Web: Buka Kunci Tombol "Kirim Proposal Resmi"
+    Pengusul->>Web: Klik "Kirim Proposal Resmi"
+    Web->>Server: Simpan Data Proposal, Berkas, & Catatan Versi 1.0
+    Server-->>Pengusul: Tampilkan Nomor Registrasi & Kirim Notif WhatsApp
+    Server-->>Wabup: Kirim Notifikasi Proposal Masuk ke Dashboard
+</div>
+</body>
+</html>

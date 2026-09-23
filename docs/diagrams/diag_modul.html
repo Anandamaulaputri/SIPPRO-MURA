@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>
+mermaid.initialize({
+    startOnLoad: true,
+    theme: 'base',
+    themeVariables: {
+        primaryColor: '#1E3A8A',
+        primaryTextColor: '#FFFFFF',
+        primaryBorderColor: '#1E3A8A',
+        lineColor: '#2563EB',
+        secondaryColor: '#F1F5F9',
+        tertiaryColor: '#FFFFFF'
+    }
+});
+</script>
+<style>
+  body {
+      background: white;
+      margin: 0;
+      padding: 20px;
+      display: inline-block;
+  }
+  .mermaid {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+</style>
+</head>
+<body>
+<div class="mermaid">
+graph LR
+    subgraph PortalPengusul ["Portal Pengusul"]
+        FR01[FR-01: Autentikasi]
+        FR02[FR-02: Form Proposal]
+        FR03[FR-03: Upload Dokumen]
+        FR04[FR-04: Checklist Ketelitian]
+        FR08[FR-08: Revisi & Resubmit]
+    end
+
+    subgraph PortalEksekutif ["Portal Wakil Bupati"]
+        FR05[FR-05: Executive Dashboard]
+        FR06[FR-06: PDF Viewer]
+        FR07[FR-07: Eksekusi Keputusan]
+    end
+
+    subgraph EngineSistem ["Sistem & Kearsipan"]
+        FR09[FR-09: Versioning Engine]
+        FR10[FR-10: Multi-Channel Notif]
+        FR11[FR-11: Cetak Disposisi]
+        FR12[FR-12: Audit Trail]
+    end
+
+    FR04 --> FR05
+    FR05 --> FR06
+    FR06 --> FR07
+    FR07 --> FR08
+    FR08 --> FR09
+    FR07 --> FR10
+    FR07 --> FR11
+</div>
+</body>
+</html>

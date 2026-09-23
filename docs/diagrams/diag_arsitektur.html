@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>
+mermaid.initialize({
+    startOnLoad: true,
+    theme: 'base',
+    themeVariables: {
+        primaryColor: '#1E3A8A',
+        primaryTextColor: '#FFFFFF',
+        primaryBorderColor: '#1E3A8A',
+        lineColor: '#2563EB',
+        secondaryColor: '#F1F5F9',
+        tertiaryColor: '#FFFFFF'
+    }
+});
+</script>
+<style>
+  body {
+      background: white;
+      margin: 0;
+      padding: 20px;
+      display: inline-block;
+  }
+  .mermaid {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+</style>
+</head>
+<body>
+<div class="mermaid">
+flowchart TD
+    subgraph ClientLayer ["1. Presentation Layer (Klien)"]
+        A1[Pengusul Browser / Smartphone]
+        A2[Wakil Bupati Tablet / Mobile]
+        A3[Staf TU / Admin Desktop]
+    end
+
+    subgraph GatewayLayer ["2. Security & Web Server"]
+        B1[Reverse Proxy / Nginx + SSL TLS 1.3]
+        B2[Firewall / Rate Limiter / CORS Protection]
+    end
+
+    subgraph AppLayer ["3. Application / Business Logic Layer"]
+        C1[Auth & RBAC Service]
+        C2[Proposal Submission & Validation Engine]
+        C3[Checklist Gatekeeper Engine]
+        C4[Executive Review & Triage Engine]
+        C5[Versioning & Audit Log Service]
+        C6[Notification Dispatcher]
+        C7[In-App PDF Viewer Engine]
+    end
+
+    subgraph DataLayer ["4. Persistence & Storage Layer"]
+        D1[(Relational Database: PostgreSQL / MySQL)]
+        D2[(Object File Storage: MinIO / AWS S3 / Local Secure)]
+        D3[(Cache / Job Queue: Redis)]
+    end
+
+    subgraph ExternalLayer ["5. External Services"]
+        E1[WhatsApp Gateway API]
+        E2[SMTP Email Server]
+    end
+
+    A1 & A2 & A3 --> B1
+    B1 --> B2
+    B2 --> C1 & C2 & C3 & C4 & C5 & C6 & C7
+    C1 & C2 & C4 & C5 & C6 --> D1
+    C2 & C5 & C7 --> D2
+    C6 --> D3
+    D3 --> E1 & E2
+</div>
+</body>
+</html>
