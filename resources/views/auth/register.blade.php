@@ -1,23 +1,23 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="py-14 px-4 sm:px-6 lg:px-8 max-w-md mx-auto">
+<div class="py-16 px-4 sm:px-6 lg:px-8 max-w-md mx-auto">
     <!-- Header -->
     <div class="text-center mb-8">
         <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-[#D4AF37] via-[#C99E2E] to-[#997C21] text-[#0B0B0B] font-black text-2xl shadow-lg shadow-[#D4AF37]/20 mb-3.5">
             SP
         </div>
-        <h2 class="text-2xl font-extrabold text-white tracking-tight">Daftar Akun</h2>
-        <p class="text-xs text-[#A3A3A3] mt-1">Sistem Informasi Pelayanan Proposal Kab. Murung Raya</p>
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">Daftarkan Akun</h1>
+        <p class="text-xs text-[#A3A3A3] mt-1.5">Sistem Informasi Pelayanan Proposal Murung Raya</p>
     </div>
 
     <!-- Registration Card -->
     <div class="bg-[#151515] p-6 sm:p-8 rounded-2xl border border-[#2A2A2A] shadow-xl">
         <div class="mb-5 pb-3 border-b border-[#2A2A2A]">
-            <h3 class="text-xs font-bold uppercase tracking-wider text-white flex items-center space-x-2">
+            <h2 class="text-xs font-bold uppercase tracking-wider text-white flex items-center space-x-2">
                 <span class="w-5 h-5 rounded-lg bg-[#0B0B0B] text-[#D4AF37] border border-[#D4AF37]/30 flex items-center justify-center text-[10px] font-black">1</span>
                 <span>Informasi Akun</span>
-            </h3>
+            </h2>
         </div>
 
         <form method="POST" action="{{ route('register.post') }}" class="space-y-4">
@@ -74,7 +74,7 @@
 
             <!-- CTA Utama -->
             <button type="submit" class="w-full py-3 px-4 bg-[#D4AF37] hover:bg-[#E6C65C] text-[#0B0B0B] font-bold rounded-xl text-xs sm:text-sm shadow-lg shadow-[#D4AF37]/20 transition-all hover:scale-[1.02] mt-2">
-                Daftar Akun
+                Daftarkan Akun
             </button>
         </form>
 

@@ -42,9 +42,10 @@ class SipproWorkflowTest extends TestCase
     {
         $response = $this->get('/login');
         $response->assertStatus(200);
-        $response->assertSee('Wakil Bupati');
-        $response->assertSee('Staf Administrasi');
-        $response->assertSee('Pengusul');
+        $response->assertSee('Masuk ke SIPPRO MURA');
+        $response->assertSee('Email');
+        $response->assertSee('Password');
+        $response->assertSee('Masuk');
     }
 
     public function test_quick_login_wabup_berhasil_ke_dasbor(): void
@@ -92,7 +93,7 @@ class SipproWorkflowTest extends TestCase
     {
         $register = $this->get('/register');
         $register->assertStatus(200);
-        $register->assertSee('Daftar Akun');
+        $register->assertSee('Daftarkan Akun');
 
         $user = User::where('role', 'pengusul')->first();
         $this->actingAs($user);
@@ -288,7 +289,7 @@ class SipproWorkflowTest extends TestCase
         $response = $this->get('/dashboard');
         $response->assertStatus(200);
         $response->assertSee('logout-confirm-modal');
-        $response->assertSee('Konfirmasi Keluar');
+        $response->assertSee('Keluar dari SIPPRO MURA?');
         $response->assertSee('Apakah Anda yakin ingin keluar dari akun?');
         $response->assertSee('Batal');
         $response->assertSee('Ya, Keluar');
