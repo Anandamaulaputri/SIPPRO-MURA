@@ -259,6 +259,11 @@ class SipproWorkflowTest extends TestCase
         $getProfile = $this->get('/profile');
         $getProfile->assertStatus(200);
         $getProfile->assertSee('Profil Pengusul');
+        $getProfile->assertSee('Informasi Akun');
+        $getProfile->assertSee('Identitas Pemohon');
+        $getProfile->assertSee('Kontak & Alamat Domisili', false);
+        $getProfile->assertSee('Rekening Penyaluran');
+        $getProfile->assertSee('Simpan Perubahan');
 
         $updateResponse = $this->put('/profile', [
             'name' => 'Budi Santoso Diperbarui',
@@ -271,7 +276,7 @@ class SipproWorkflowTest extends TestCase
             'nama_pemilik_rekening' => 'Karang Taruna Mura Hebat',
         ]);
 
-        $updateResponse->assertSessionHas('success');
+        $updateResponse->assertSessionHas('success', 'Profil berhasil diperbarui.');
 
         $this->assertDatabaseHas('users', [
             'id' => $pengusul->id,
@@ -284,6 +289,57 @@ class SipproWorkflowTest extends TestCase
             'nama_lembaga' => 'Karang Taruna Mura Hebat',
             'nomor_rekening' => '100-99-887766-5',
         ]);
+    }
+
+    public function test_pengusul_dapat_memperbarui_profil_sebagai_perorangan(): void
+    {
+        $pengusul = User::where('role', 'pengusul')->first();
+        $this->actingAs($pengusul);
+
+        $response = $this->put('/profile', [
+            'name' => 'Budi Santoso Mandiri',
+            'no_telepon' => '081234567999',
+            'jenis_pemohon' => 'perorangan',
+            'nama_lembaga' => '',
+            'nomor_identitas' => '6212011234560001',
+            'alamat' => 'Jl. Merdeka No. 10, Puruk Cahu',
+            'nama_bank' => 'Bank BRI Puruk Cahu',
+            'nomor_rekening' => '0123-01-001234-50-1',
+            'nama_pemilik_rekening' => 'Budi Santoso',
+        ]);
+
+        $response->assertSessionHas('success', 'Profil berhasil diperbarui.');
+
+        $this->assertDatabaseHas('profiles', [
+            'user_id' => $pengusul->id,
+            'jenis_pemohon' => 'perorangan',
+            'nama_lembaga' => null,
+            'nomor_identitas' => '6212011234560001',
+            'nomor_rekening' => '0123-01-001234-50-1',
+        ]);
+
+        // Verifikasi bahwa data yang disimpan muncul kembali ketika halaman profil dibuka ulang
+        $reopenedProfile = $this->get('/profile');
+        $reopenedProfile->assertStatus(200);
+        $reopenedProfile->assertSee('Budi Santoso Mandiri');
+        $reopenedProfile->assertSee('081234567999');
+        $reopenedProfile->assertSee('6212011234560001');
+        $reopenedProfile->assertSee('Bank BRI Puruk Cahu');
+        $reopenedProfile->assertSee('0123-01-001234-50-1');
+        $reopenedProfile->assertSee('Budi Santoso');
+    }
+
+    public function test_validasi_profil_gagal_jika_nama_atau_no_telepon_kosong(): void
+    {
+        $pengusul = User::where('role', 'pengusul')->first();
+        $this->actingAs($pengusul);
+
+        $response = $this->put('/profile', [
+            'name' => '',
+            'no_telepon' => '',
+        ]);
+
+        $response->assertSessionHasErrors(['name', 'no_telepon']);
     }
 
     public function test_dialog_konfirmasi_logout_tersedia_di_dasbor_untuk_pengguna_login(): void

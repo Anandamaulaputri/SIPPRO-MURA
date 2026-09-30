@@ -157,6 +157,7 @@ class AuthController extends Controller
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'no_telepon' => ['required', 'string', 'max:20'],
+            'jenis_pemohon' => ['nullable', 'string', 'in:organisasi,perorangan'],
             'nama_lembaga' => ['nullable', 'string', 'max:255'],
             'nomor_identitas' => ['nullable', 'string', 'max:50'],
             'alamat' => ['nullable', 'string'],
@@ -170,10 +171,18 @@ class AuthController extends Controller
             'no_telepon' => $validated['no_telepon'],
         ]);
 
+        $jenisPemohon = $validated['jenis_pemohon']
+            ?? (! empty($validated['nama_lembaga']) ? 'organisasi' : ($user->profile?->jenis_pemohon ?? 'perorangan'));
+
+        $namaLembaga = ($jenisPemohon === 'organisasi')
+            ? ($validated['nama_lembaga'] ?? $user->profile?->nama_lembaga)
+            : null;
+
         $user->profile()->updateOrCreate(
             ['user_id' => $user->id],
             [
-                'nama_lembaga' => $validated['nama_lembaga'] ?? $user->profile?->nama_lembaga,
+                'jenis_pemohon' => $jenisPemohon,
+                'nama_lembaga' => $namaLembaga,
                 'nomor_identitas' => $validated['nomor_identitas'] ?? $user->profile?->nomor_identitas,
                 'alamat' => $validated['alamat'] ?? $user->profile?->alamat,
                 'nama_bank' => $validated['nama_bank'] ?? $user->profile?->nama_bank,
@@ -189,6 +198,6 @@ class AuthController extends Controller
             'ip_address' => $request->ip(),
         ]);
 
-        return back()->with('success', 'Profil berhasil diperbarui!');
+        return back()->with('success', 'Profil berhasil diperbarui.');
     }
 }
