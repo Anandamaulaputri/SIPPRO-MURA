@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.public')
 
 @section('content')
 <div class="relative bg-[#0B0B0B] text-white py-24 sm:py-32 lg:py-40 min-h-[calc(100vh-250px)] flex flex-col justify-center items-center">

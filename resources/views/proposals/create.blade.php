@@ -51,11 +51,11 @@
     <!-- Form Utama Proposal -->
     <div class="bg-[#151515] rounded-3xl border border-[#2A2A2A] shadow-2xl p-6 sm:p-10">
         <div class="border-b border-[#2A2A2A] pb-6 mb-8">
-            <div class="flex items-center space-x-3 mb-2">
-                <span class="px-2.5 py-1 rounded bg-[#0B0B0B] text-[#D4AF37] border border-[#2A2A2A] font-mono text-xs font-bold">
-                    SIPPRO MURA
+            <div class="flex items-center space-x-2 mb-2">
+                <span class="px-2.5 py-1 rounded-md text-xs font-bold uppercase tracking-wider bg-[#D4AF37]/15 text-[#D4AF37] border border-[#D4AF37]/40">
+                    Formulir Resmi
                 </span>
-                <span class="text-xs text-[#737373]">Bagian Pelayanan Administrasi Pimpinan Setda Kab. Murung Raya</span>
+                <span class="text-xs text-[#737373] font-medium">Bantuan Hibah & Bansos</span>
             </div>
             <h1 class="text-2xl sm:text-3xl font-black text-white tracking-tight">Formulir Pengajuan Proposal Baru</h1>
             <p class="text-xs text-[#A3A3A3] mt-1.5 leading-relaxed">

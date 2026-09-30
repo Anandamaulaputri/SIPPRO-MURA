@@ -24,7 +24,7 @@
             <span class="px-2.5 py-1 rounded-md text-xs font-bold uppercase tracking-wider bg-[#D4AF37]/15 text-[#D4AF37] border border-[#D4AF37]/40">
                 Data Master Pengusul
             </span>
-            <span class="text-xs text-[#737373] font-medium">SIPPRO MURA</span>
+            <span class="text-xs text-[#737373] font-medium">Kabupaten Murung Raya</span>
         </div>
         <h1 class="text-2xl sm:text-3xl font-black text-white tracking-tight">
             Profil Pengusul & Rekening Penyaluran

@@ -55,9 +55,30 @@
     <!-- Proposals Table -->
     <div class="bg-[#151515] rounded-2xl border border-[#2A2A2A] shadow-md overflow-hidden mb-6">
         @if($proposals->isEmpty())
-            <div class="p-12 text-center text-[#A3A3A3]">
-                <p class="text-sm font-semibold">Tidak ada proposal yang sesuai dengan kriteria pencarian.</p>
-                <p class="text-xs text-[#737373] mt-1">Silakan sesuaikan filter pencarian Anda.</p>
+            <div class="py-12 px-6 text-center">
+                <div class="w-12 h-12 rounded-2xl bg-[#1B1B1B] border border-[#2A2A2A] text-[#D4AF37] flex items-center justify-center mx-auto mb-3 text-xl font-bold">
+                    📑
+                </div>
+                <h3 class="text-sm sm:text-base font-bold text-white">Belum Ada Usulan Proposal</h3>
+                <p class="text-xs text-[#A3A3A3] max-w-sm mx-auto mt-1 mb-5 leading-relaxed">
+                    @if(request('search') || request('status'))
+                        Tidak ada usulan proposal yang cocok dengan kriteria filter Anda. Silakan ubah atau reset filter.
+                    @else
+                        Anda belum memiliki riwayat pengajuan proposal bantuan ke Pemerintah Kabupaten Murung Raya.
+                    @endif
+                </p>
+                @if(request('search') || request('status'))
+                    <a href="{{ route('proposals.index') }}" class="inline-flex items-center space-x-2 px-4 py-2 rounded-xl bg-[#1F1F1F] text-[#D4AF37] hover:text-[#E6C65C] border border-[#2A2A2A] text-xs font-bold transition-all">
+                        <span>Reset Filter Pencarian</span>
+                    </a>
+                @elseif(auth()->user()->isPengusul())
+                    <a href="{{ route('proposals.create') }}" class="inline-flex items-center space-x-2 px-5 py-2.5 bg-[#D4AF37] hover:bg-[#E6C65C] text-[#0B0B0B] font-bold text-xs rounded-xl shadow-md transition-all hover:scale-105">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4" />
+                        </svg>
+                        <span>+ Buat Usulan Proposal Pertama</span>
+                    </a>
+                @endif
             </div>
         @else
             <div class="overflow-x-auto">
