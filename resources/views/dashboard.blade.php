@@ -30,17 +30,6 @@
                     @endif
                 </p>
             </div>
-
-            @if($user->isPengusul())
-                <div class="shrink-0">
-                    <a href="{{ route('proposals.create') }}" class="inline-flex items-center space-x-2 px-6 py-3.5 bg-[#D4AF37] hover:bg-[#E6C65C] text-[#0B0B0B] font-bold rounded-2xl text-xs sm:text-sm shadow-lg shadow-[#D4AF37]/20 transition-all hover:scale-105">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4" />
-                        </svg>
-                        <span>Ajukan Usulan Baru</span>
-                    </a>
-                </div>
-            @endif
         </div>
     </div>
 
