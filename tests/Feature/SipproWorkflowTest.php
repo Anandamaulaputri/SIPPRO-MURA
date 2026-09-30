@@ -92,7 +92,7 @@ class SipproWorkflowTest extends TestCase
     {
         $register = $this->get('/register');
         $register->assertStatus(200);
-        $register->assertSee('Pendaftaran Akun Pengusul');
+        $register->assertSee('Daftar Akun');
 
         $user = User::where('role', 'pengusul')->first();
         $this->actingAs($user);
@@ -278,5 +278,67 @@ class SipproWorkflowTest extends TestCase
             'nama_lembaga' => 'Karang Taruna Mura Hebat',
             'nomor_rekening' => '100-99-887766-5',
         ]);
+    }
+
+    public function test_dialog_konfirmasi_logout_tersedia_di_dasbor_untuk_pengguna_login(): void
+    {
+        $pengusul = User::where('role', 'pengusul')->first();
+        $this->actingAs($pengusul);
+
+        $response = $this->get('/dashboard');
+        $response->assertStatus(200);
+        $response->assertSee('logout-confirm-modal');
+        $response->assertSee('Konfirmasi Keluar');
+        $response->assertSee('Apakah Anda yakin ingin keluar dari akun?');
+        $response->assertSee('Batal');
+        $response->assertSee('Ya, Keluar');
+    }
+
+    public function test_registrasi_akun_baru_berhasil_hanya_dengan_data_akun_minimal(): void
+    {
+        $response = $this->post('/register', [
+            'name' => 'Siti Rahmawati',
+            'email' => 'siti.rahmawati@gmail.com',
+            'password' => 'password123',
+            'password_confirmation' => 'password123',
+        ]);
+
+        $this->assertAuthenticated();
+
+        $newUser = User::where('email', 'siti.rahmawati@gmail.com')->first();
+        $this->assertNotNull($newUser);
+        $this->assertEquals('Siti Rahmawati', $newUser->name);
+        $this->assertEquals('pengusul', $newUser->role);
+
+        // Memastikan record profiles otomatis terinisialisasi
+        $this->assertDatabaseHas('profiles', [
+            'user_id' => $newUser->id,
+        ]);
+
+        $response->assertRedirect('/dashboard');
+        $response->assertSessionHas('success', 'Akun berhasil dibuat. Selamat datang di SIPPRO MURA!');
+    }
+
+    public function test_registrasi_gagal_jika_konfirmasi_password_salah(): void
+    {
+        $response = $this->post('/register', [
+            'name' => 'Ahmad Fauzi',
+            'email' => 'ahmad.fauzi@gmail.com',
+            'password' => 'password123',
+            'password_confirmation' => 'passwordBeda',
+        ]);
+
+        $response->assertSessionHasErrors(['password']);
+        $this->assertGuest();
+    }
+
+    public function test_pengguna_bisa_logout_dan_sesi_dibersihkan(): void
+    {
+        $user = User::where('role', 'pengusul')->first();
+        $this->actingAs($user);
+
+        $response = $this->post('/logout');
+        $response->assertRedirect('/');
+        $this->assertGuest();
     }
 }

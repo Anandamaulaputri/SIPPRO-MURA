@@ -206,15 +206,12 @@
                             </div>
                         </div>
 
-                        <!-- Logout Form -->
-                        <form method="POST" action="{{ route('logout') }}" class="inline">
-                            @csrf
-                            <button type="submit" class="p-2 text-[#737373] hover:text-rose-400 hover:bg-rose-950/30 rounded-lg transition-colors" title="Keluar">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                                </svg>
-                            </button>
-                        </form>
+                        <!-- Logout Trigger Button -->
+                        <button type="button" onclick="openLogoutModal()" class="p-2 text-[#737373] hover:text-rose-400 hover:bg-rose-950/30 rounded-lg transition-colors" title="Keluar">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                            </svg>
+                        </button>
                     </div>
                 @endauth
             </div>
@@ -312,6 +309,76 @@
             </div>
         </div>
     </footer>
+
+    @auth
+        <!-- Dialog Konfirmasi Logout (Sesuai Standar UX SIPPRO MURA) -->
+        <div id="logout-confirm-modal" class="fixed inset-0 z-50 hidden overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="logout-modal-title">
+            <!-- Backdrop with blur -->
+            <div class="fixed inset-0 bg-black/80 backdrop-blur-sm transition-opacity" onclick="closeLogoutModal()"></div>
+
+            <div class="flex min-h-screen items-center justify-center p-4 text-center sm:p-0">
+                <div class="relative transform overflow-hidden rounded-2xl bg-[#151515] border border-[#2A2A2A] text-left shadow-2xl transition-all w-full max-w-sm my-8">
+                    <!-- Header -->
+                    <div class="flex items-center justify-between border-b border-[#2A2A2A] p-5 bg-[#181818]">
+                        <h3 class="text-sm sm:text-base font-extrabold text-white flex items-center space-x-2" id="logout-modal-title">
+                            <span class="text-[#D4AF37]">🚪</span>
+                            <span>Konfirmasi Keluar</span>
+                        </h3>
+                        <button type="button" 
+                                onclick="closeLogoutModal()"
+                                class="rounded-lg p-1.5 text-[#A3A3A3] hover:text-white hover:bg-[#252525] transition-colors">
+                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- Body -->
+                    <div class="p-5 sm:p-6 text-xs sm:text-sm text-[#D4D4D4] leading-relaxed">
+                        <p class="text-white font-medium">
+                            Apakah Anda yakin ingin keluar dari akun?
+                        </p>
+                        <p class="text-xs text-[#A3A3A3] mt-1.5 leading-relaxed">
+                            Sesi Anda akan diakhiri dan Anda perlu masuk kembali untuk mengakses sistem.
+                        </p>
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="border-t border-[#2A2A2A] p-4 bg-[#111111] flex justify-end space-x-2.5">
+                        <button type="button" 
+                                onclick="closeLogoutModal()"
+                                class="px-4 py-2 rounded-xl text-xs font-semibold text-[#A3A3A3] hover:text-white hover:bg-[#1F1F1F] border border-[#2A2A2A] transition-colors">
+                            Batal
+                        </button>
+                        <form method="POST" action="{{ route('logout') }}" class="inline">
+                            @csrf
+                            <button type="submit" 
+                                    class="px-5 py-2 rounded-xl text-xs font-bold text-white bg-rose-600 hover:bg-rose-700 shadow-md shadow-rose-900/30 transition-all">
+                                Ya, Keluar
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            function openLogoutModal() {
+                const modal = document.getElementById('logout-confirm-modal');
+                if (modal) {
+                    modal.classList.remove('hidden');
+                    document.body.classList.add('overflow-hidden');
+                }
+            }
+            function closeLogoutModal() {
+                const modal = document.getElementById('logout-confirm-modal');
+                if (modal) {
+                    modal.classList.add('hidden');
+                    document.body.classList.remove('overflow-hidden');
+                }
+            }
+        </script>
+    @endauth
 
     @stack('scripts')
 </body>

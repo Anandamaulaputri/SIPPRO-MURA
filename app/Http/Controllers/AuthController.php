@@ -95,15 +95,7 @@ class AuthController extends Controller
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'no_telepon' => ['required', 'string', 'max:20'],
             'password' => ['required', 'confirmed', Password::defaults()],
-            'jenis_pemohon' => ['required', 'in:organisasi,perorangan'],
-            'nama_lembaga' => ['nullable', 'string', 'max:255'],
-            'nomor_identitas' => ['required', 'string', 'max:50'],
-            'alamat' => ['required', 'string'],
-            'nama_bank' => ['nullable', 'string', 'max:100'],
-            'nomor_rekening' => ['nullable', 'string', 'max:50'],
-            'nama_pemilik_rekening' => ['nullable', 'string', 'max:150'],
         ]);
 
         $user = User::create([
@@ -111,18 +103,12 @@ class AuthController extends Controller
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
             'role' => 'pengusul',
-            'no_telepon' => $validated['no_telepon'],
+            'no_telepon' => null,
         ]);
 
         Profile::create([
             'user_id' => $user->id,
-            'jenis_pemohon' => $validated['jenis_pemohon'],
-            'nama_lembaga' => $validated['jenis_pemohon'] === 'organisasi' ? $validated['nama_lembaga'] : null,
-            'nomor_identitas' => $validated['nomor_identitas'],
-            'alamat' => $validated['alamat'],
-            'nama_bank' => $validated['nama_bank'] ?? null,
-            'nomor_rekening' => $validated['nomor_rekening'] ?? null,
-            'nama_pemilik_rekening' => $validated['nama_pemilik_rekening'] ?? null,
+            'jenis_pemohon' => 'perorangan',
         ]);
 
         Auth::login($user);
@@ -131,11 +117,11 @@ class AuthController extends Controller
         ActivityLog::create([
             'user_id' => $user->id,
             'aktivitas' => 'Pendaftaran Akun Baru',
-            'keterangan' => 'Pemohon mendaftarkan akun pengusul baru.',
+            'keterangan' => 'Pengguna mendaftarkan akun baru via portal web.',
             'ip_address' => $request->ip(),
         ]);
 
-        return redirect()->route('dashboard')->with('success', 'Akun berhasil didaftarkan! Selamat datang di SIPPRO MURA.');
+        return redirect()->route('dashboard')->with('success', 'Akun berhasil dibuat. Selamat datang di SIPPRO MURA!');
     }
 
     public function logout(Request $request)

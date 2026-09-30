@@ -138,6 +138,29 @@
 
     <!-- ROLE 2: PENGUSUL (MASYARAKAT / ORMAS) -->
     @if($user->isPengusul())
+        <!-- Reminder Kelengkapan Profil Pemohon (Sesuai UX SIPPRO MURA) -->
+        @if(!$user->no_telepon || !$user->profile?->nomor_rekening || !$user->profile?->alamat)
+            <div class="mb-8 p-5 sm:p-6 rounded-2xl bg-gradient-to-r from-[#1A1A12] via-[#161612] to-[#1A1A12] border border-[#D4AF37]/40 shadow-lg flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div class="flex items-start sm:items-center space-x-3.5">
+                    <div class="w-10 h-10 rounded-xl bg-[#D4AF37]/15 border border-[#D4AF37]/30 text-[#D4AF37] flex items-center justify-center text-lg font-bold shrink-0">
+                        🏢
+                    </div>
+                    <div>
+                        <h3 class="text-xs sm:text-sm font-bold text-white flex items-center space-x-2">
+                            <span>Lengkapi Profil Organisasi & Rekening Penyaluran</span>
+                            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-[#D4AF37]/20 text-[#E6C65C]">Langkah Lanjutan</span>
+                        </h3>
+                        <p class="text-[11px] text-[#A3A3A3] mt-0.5 max-w-xl leading-relaxed">
+                            Akun Anda telah aktif. Sebelum mengajukan usulan proposal, silakan lengkapi kontak penanggung jawab, identitas lembaga, dan rekening bank penyaluran resmi.
+                        </p>
+                    </div>
+                </div>
+                <a href="{{ route('profile.show') }}" class="shrink-0 px-4 py-2.5 bg-[#D4AF37] hover:bg-[#E6C65C] text-[#0B0B0B] font-bold rounded-xl text-xs transition-all shadow-md shadow-[#D4AF37]/20 text-center">
+                    Lengkapi Profil Sekarang &rarr;
+                </a>
+            </div>
+        @endif
+
         <!-- Pengusul KPI Cards -->
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
             <div class="p-5 rounded-2xl bg-[#151515] border border-[#2A2A2A] shadow-xs">
