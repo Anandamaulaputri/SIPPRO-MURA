@@ -213,16 +213,6 @@
                             </svg>
                         </button>
                     </div>
-                @else
-                    <!-- Clean Entry CTA for Guests -->
-                    <div class="flex items-center space-x-2.5">
-                        <a href="{{ route('register') }}" class="px-4 py-2 rounded-xl bg-[#D4AF37] hover:bg-[#E6C65C] text-[#0B0B0B] font-bold text-xs transition-all shadow-md shadow-[#D4AF37]/20">
-                            Daftarkan Akun
-                        </a>
-                        <a href="{{ route('login') }}" class="px-4 py-2 rounded-xl bg-[#181818] hover:bg-[#202020] border border-[#2A2A2A] hover:border-[#D4AF37]/50 text-white font-medium text-xs transition-all">
-                            Masuk
-                        </a>
-                    </div>
                 @endauth
             </div>
         </div>

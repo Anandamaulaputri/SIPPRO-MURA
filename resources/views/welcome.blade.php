@@ -8,7 +8,8 @@
     <div class="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center my-auto">
         <!-- Hero Utama -->
         <h1 class="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight uppercase leading-tight font-serif">
-            Sistem Informasi Pelayanan Proposal<br>
+            Sistem Informasi Pelayanan<br>
+            Proposal<br>
             <span class="text-[#E6C65C]">Murung Raya</span>
         </h1>
 

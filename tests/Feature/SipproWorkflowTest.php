@@ -27,6 +27,11 @@ class SipproWorkflowTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee('SIPPRO');
         $response->assertSee('Murung Raya');
+        $response->assertSee('Daftarkan Akun');
+        $response->assertSee('Masuk');
+
+        // Memastikan tombol Daftarkan Akun hanya muncul tepat 1 kali (tidak ganda di navbar)
+        $this->assertEquals(1, substr_count($response->getContent(), 'Daftarkan Akun'));
     }
 
     public function test_pelacakan_proposal_publik_berfungsi(): void
