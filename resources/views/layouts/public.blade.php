@@ -106,25 +106,6 @@
                         </p>
                     </div>
                 </a>
-
-                <!-- Public Actions -->
-                <div class="flex items-center space-x-3">
-                    @auth
-                        <a href="{{ route('dashboard') }}" 
-                           class="px-5 py-2.5 rounded-xl bg-[#D4AF37] hover:bg-[#E6C65C] text-[#0B0B0B] font-bold text-xs shadow-md shadow-[#D4AF37]/20 transition-all">
-                            Buka Dasbor Saya &rarr;
-                        </a>
-                    @else
-                        <a href="{{ route('login') }}" 
-                           class="px-4 py-2 rounded-xl text-xs font-semibold text-[#A3A3A3] hover:text-white hover:bg-[#1F1F1F] transition-colors">
-                            Masuk
-                        </a>
-                        <a href="{{ route('register') }}" 
-                           class="px-4 py-2 rounded-xl bg-[#D4AF37] hover:bg-[#E6C65C] text-[#0B0B0B] font-bold text-xs shadow-sm transition-all">
-                            Daftar Akun
-                        </a>
-                    @endauth
-                </div>
             </div>
         </div>
     </header>
