@@ -176,16 +176,45 @@
     <!-- Global Toast Alerts -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-5 w-full">
         @if(session('success'))
-            <div class="p-4 mb-4 rounded-2xl bg-[#151515] border border-emerald-500/40 text-emerald-300 flex items-start space-x-3 shadow-lg shadow-black/50">
-                <div class="text-emerald-400 mt-0.5">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            <div id="flash-success-toast" 
+                 class="p-4 sm:p-5 mb-4 rounded-2xl bg-[#151515] border border-emerald-500/50 text-emerald-300 text-sm shadow-xl shadow-black/50 flex items-center justify-between transition-all duration-500 ease-in-out transform">
+                <div class="flex items-center space-x-3.5">
+                    <div class="w-8 h-8 rounded-xl bg-emerald-950/70 border border-emerald-700/50 text-emerald-400 flex items-center justify-center shrink-0">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="font-bold text-emerald-200">{{ session('success') }}</p>
+                        <p class="text-xs text-emerald-400/80 mt-0.5">Seluruh perubahan profil telah tersimpan aman di sistem.</p>
+                    </div>
+                </div>
+                <button type="button" 
+                        onclick="dismissSuccessToast()" 
+                        class="ml-4 p-1.5 text-emerald-400/70 hover:text-emerald-200 hover:bg-emerald-900/30 rounded-lg transition-colors" 
+                        title="Tutup Notifikasi">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                     </svg>
-                </div>
-                <div class="text-xs font-semibold leading-relaxed">
-                    {{ session('success') }}
-                </div>
+                </button>
             </div>
+
+            <script>
+                function dismissSuccessToast() {
+                    const toast = document.getElementById('flash-success-toast');
+                    if (toast) {
+                        toast.classList.add('opacity-0', '-translate-y-3');
+                        setTimeout(function() {
+                            toast.remove();
+                        }, 500);
+                    }
+                }
+
+                // Otomatis fade-out setelah 3 detik (3000ms)
+                document.addEventListener('DOMContentLoaded', function() {
+                    setTimeout(dismissSuccessToast, 3000);
+                });
+            </script>
         @endif
 
         @if(session('error'))

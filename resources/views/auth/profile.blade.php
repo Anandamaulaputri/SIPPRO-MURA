@@ -4,7 +4,7 @@
 <div class="py-8 sm:py-12 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
     <!-- Breadcrumb & Top Bar -->
     <div class="mb-6 flex flex-wrap items-center justify-between gap-3">
-        <a href="{{ route('dashboard') }}" class="inline-flex items-center space-x-2 text-xs font-bold text-[#A3A3A3] hover:text-[#D4AF37] transition-colors">
+        <a href="{{ route('dashboard') }}" class="inline-flex items-center space-x-2 text-xs sm:text-sm font-semibold text-[#A3A3A3] hover:text-[#D4AF37] transition-colors">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
@@ -12,7 +12,7 @@
         </a>
 
         <div class="flex items-center space-x-2">
-            <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-[#151515] border border-[#2A2A2A] text-[#D4AF37] font-mono">
+            <span class="px-3 py-1 rounded-full text-xs font-bold bg-[#151515] border border-[#2A2A2A] text-[#D4AF37] font-mono">
                 ID Pengguna: #{{ $user->id }}
             </span>
         </div>
@@ -20,8 +20,8 @@
 
     <!-- Header Section -->
     <div class="mb-8">
-        <div class="flex items-center space-x-2 mb-2">
-            <span class="px-2.5 py-0.5 rounded text-[10px] font-extrabold uppercase tracking-wider bg-[#D4AF37]/15 text-[#D4AF37] border border-[#D4AF37]/40">
+        <div class="flex items-center space-x-2 mb-2.5">
+            <span class="px-2.5 py-1 rounded-md text-xs font-bold uppercase tracking-wider bg-[#D4AF37]/15 text-[#D4AF37] border border-[#D4AF37]/40">
                 Data Master Pengusul
             </span>
             <span class="text-xs text-[#737373] font-medium">SIPPRO MURA</span>
@@ -29,33 +29,23 @@
         <h1 class="text-2xl sm:text-3xl font-black text-white tracking-tight">
             Profil Pengusul & Rekening Penyaluran
         </h1>
-        <p class="text-xs sm:text-sm text-[#A3A3A3] mt-2 max-w-2xl leading-relaxed">
+        <p class="text-sm text-[#A3A3A3] mt-2 max-w-2xl leading-relaxed">
             Lengkapi data identitas pemohon dan rekening bank resmi sebagai syarat administrasi sebelum mengajukan usulan proposal baru kepada Pemerintah Kabupaten Murung Raya.
         </p>
     </div>
 
-    <!-- Notifikasi Sukses -->
-    @if(session('success'))
-        <div class="mb-6 p-4 rounded-2xl bg-[#151515] border border-emerald-500/40 text-emerald-300 text-xs sm:text-sm flex items-center space-x-3 shadow-lg shadow-black/40">
-            <div class="text-emerald-400 shrink-0">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-            </div>
-            <span class="font-semibold">{{ session('success') }}</span>
-        </div>
-    @endif
+
 
     <!-- Alert Kesalahan Validasi -->
     @if($errors->any())
-        <div class="mb-6 p-4 rounded-2xl bg-rose-950/60 border border-rose-800/60 text-rose-300 text-xs flex flex-col space-y-1.5 shadow-lg shadow-black/40">
-            <div class="flex items-center space-x-2 font-bold text-rose-200">
-                <svg class="w-4 h-4 shrink-0 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="mb-8 p-5 rounded-2xl bg-rose-950/60 border border-rose-800/60 text-rose-300 text-sm flex flex-col space-y-2 shadow-lg shadow-black/40">
+            <div class="flex items-center space-x-2.5 font-bold text-rose-200">
+                <svg class="w-5 h-5 shrink-0 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 <span>Mohon periksa kembali isian formulir:</span>
             </div>
-            <ul class="list-disc list-inside pl-6 space-y-0.5 text-[11px] text-rose-300">
+            <ul class="list-disc list-inside pl-6 space-y-1 text-xs text-rose-300">
                 @foreach($errors->all() as $error)
                     <li>{{ $error }}</li>
                 @endforeach
@@ -63,72 +53,82 @@
         </div>
     @endif
 
-    <form method="POST" action="{{ route('profile.update') }}" class="space-y-6">
+    <form method="POST" action="{{ route('profile.update') }}" class="space-y-8">
         @csrf
         @method('PUT')
 
-        <!-- SECTION 1: INFORMASI AKUN -->
-        <div class="p-6 sm:p-8 rounded-3xl bg-[#151515] border border-[#2A2A2A] shadow-xl space-y-5">
-            <div class="flex items-center space-x-3 border-b border-[#2A2A2A] pb-4">
-                <div class="w-8 h-8 rounded-xl bg-[#0B0B0B] border border-[#D4AF37]/30 text-[#D4AF37] flex items-center justify-center text-xs font-black shrink-0">
-                    1
-                </div>
+        <!-- CARD 1 — INFORMASI AKUN -->
+        <div class="p-6 sm:p-8 rounded-[18px] bg-[#151515] border border-[#2A2A2A] shadow-xl">
+            <!-- Header Card -->
+            <div class="border-b border-[#2A2A2A] pb-4 mb-6 flex items-start space-x-3.5">
+                <span class="px-2.5 py-1 rounded-lg bg-[#0B0B0B] border border-[#D4AF37]/40 text-[#D4AF37] font-mono text-xs font-black tracking-wider shadow-inner shrink-0 mt-0.5">
+                    01
+                </span>
                 <div>
-                    <h2 class="text-sm sm:text-base font-bold text-white uppercase tracking-wider">Informasi Akun</h2>
-                    <p class="text-[11px] text-[#A3A3A3]">Data autentikasi akun login Anda pada sistem SIPPRO MURA.</p>
+                    <h2 class="text-base sm:text-lg font-extrabold text-white tracking-wide uppercase">
+                        Informasi Akun
+                    </h2>
+                    <p class="text-xs sm:text-sm text-[#A3A3A3] mt-1 leading-relaxed">
+                        Data autentikasi akun pengusul pada sistem SIPPRO MURA.
+                    </p>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Nama Lengkap Akun -->
                 <div>
-                    <label for="name" class="block text-xs font-bold uppercase tracking-wider text-[#A3A3A3] mb-1.5">
+                    <label for="name" class="block text-xs font-bold uppercase tracking-wider text-[#C0C0C0] mb-2">
                         Nama Lengkap Akun <span class="text-[#D4AF37]">*</span>
                     </label>
                     <input type="text" name="name" id="name" value="{{ old('name', $user->name) }}" required
                            placeholder="Contoh: Budi Santoso, S.Pd"
-                           class="w-full px-4 py-2.5 bg-[#0B0B0B] border border-[#2A2A2A] text-white rounded-xl text-xs sm:text-sm focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] outline-none transition-all">
-                    <p class="text-[11px] text-[#737373] mt-1">Nama lengkap pemilik akun penanggung jawab/pengusul.</p>
+                           class="w-full px-4 py-3 bg-[#0E0E0E] border border-[#2A2A2A] text-white rounded-xl text-sm focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] outline-none transition-all">
+                    <p class="text-xs text-[#808080] mt-1.5">Nama lengkap pemilik akun penanggung jawab/pengusul.</p>
                     @error('name') <p class="text-xs text-rose-400 mt-1">{{ $message }}</p> @enderror
                 </div>
 
                 <!-- Alamat Email (Read-Only) -->
                 <div>
-                    <div class="flex items-center justify-between mb-1.5">
-                        <label class="block text-xs font-bold uppercase tracking-wider text-[#A3A3A3]">
+                    <div class="flex items-center justify-between mb-2">
+                        <label class="block text-xs font-bold uppercase tracking-wider text-[#C0C0C0]">
                             Alamat Email (Akun Login)
                         </label>
-                        <span class="text-[10px] text-[#737373] font-mono">Terkunci</span>
+                        <span class="text-[11px] text-[#A3A3A3] bg-[#0E0E0E] px-2 py-0.5 rounded border border-[#2A2A2A] font-mono">Terkunci</span>
                     </div>
                     <div class="relative">
                         <input type="email" value="{{ $user->email }}" disabled readonly
-                               class="w-full px-4 py-2.5 bg-[#0E0E0E] border border-[#222222] text-[#888888] rounded-xl text-xs sm:text-sm cursor-not-allowed select-none">
-                        <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-[#555555]">
+                               class="w-full px-4 py-3 bg-[#121212] border border-[#222222] text-[#888888] rounded-xl text-sm cursor-not-allowed select-none">
+                        <div class="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none text-[#555555]">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                             </svg>
                         </div>
                     </div>
-                    <p class="text-[11px] text-[#737373] mt-1">Email terikat dengan autentikasi akun dan tidak dapat diubah sembarangan.</p>
+                    <p class="text-xs text-[#808080] mt-1.5">Email terikat dengan keamanan autentikasi akun dan tidak dapat diubah sembarangan.</p>
                 </div>
             </div>
         </div>
 
-        <!-- SECTION 2: IDENTITAS PEMOHON -->
-        <div class="p-6 sm:p-8 rounded-3xl bg-[#151515] border border-[#2A2A2A] shadow-xl space-y-5">
-            <div class="flex items-center space-x-3 border-b border-[#2A2A2A] pb-4">
-                <div class="w-8 h-8 rounded-xl bg-[#0B0B0B] border border-[#D4AF37]/30 text-[#D4AF37] flex items-center justify-center text-xs font-black shrink-0">
-                    2
-                </div>
+        <!-- CARD 2 — IDENTITAS PEMOHON -->
+        <div class="p-6 sm:p-8 rounded-[18px] bg-[#151515] border border-[#2A2A2A] shadow-xl">
+            <!-- Header Card -->
+            <div class="border-b border-[#2A2A2A] pb-4 mb-6 flex items-start space-x-3.5">
+                <span class="px-2.5 py-1 rounded-lg bg-[#0B0B0B] border border-[#D4AF37]/40 text-[#D4AF37] font-mono text-xs font-black tracking-wider shadow-inner shrink-0 mt-0.5">
+                    02
+                </span>
                 <div>
-                    <h2 class="text-sm sm:text-base font-bold text-white uppercase tracking-wider">Identitas Pemohon</h2>
-                    <p class="text-[11px] text-[#A3A3A3]">Tentukan status pemohon apakah mewakili organisasi/lembaga atau perorangan.</p>
+                    <h2 class="text-base sm:text-lg font-extrabold text-white tracking-wide uppercase">
+                        Identitas Pemohon
+                    </h2>
+                    <p class="text-xs sm:text-sm text-[#A3A3A3] mt-1 leading-relaxed">
+                        Pilih jenis pemohon dan lengkapi dokumen identitas atau legalitas yang sah.
+                    </p>
                 </div>
             </div>
 
-            <!-- Pilihan Jenis Pemohon -->
-            <div>
-                <label class="block text-xs font-bold uppercase tracking-wider text-[#A3A3A3] mb-2.5">
+            <!-- Pilihan Jenis Pemohon (Selectable Cards yang Lebih Lega) -->
+            <div class="mb-6">
+                <label class="block text-xs font-bold uppercase tracking-wider text-[#C0C0C0] mb-3">
                     Jenis Pemohon <span class="text-[#D4AF37]">*</span>
                 </label>
 
@@ -136,35 +136,39 @@
                     $currentJenis = old('jenis_pemohon', $profile->jenis_pemohon ?? 'organisasi');
                 @endphp
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <!-- Opsi Organisasi / Lembaga -->
-                    <label id="card_organisasi" class="relative flex items-start p-4 rounded-2xl border cursor-pointer transition-all {{ $currentJenis === 'organisasi' ? 'bg-[#D4AF37]/10 border-[#D4AF37]' : 'bg-[#0B0B0B] border-[#2A2A2A] hover:border-[#3A3A3A]' }}">
+                    <label id="card_organisasi" class="relative flex items-start p-5 rounded-2xl border cursor-pointer transition-all duration-200 {{ $currentJenis === 'organisasi' ? 'bg-[#D4AF37]/5 border-[#D4AF37] shadow-sm shadow-[#D4AF37]/10' : 'bg-[#0E0E0E] border-[#2A2A2A] hover:border-[#383838]' }}">
                         <input type="radio" name="jenis_pemohon" value="organisasi" class="sr-only" {{ $currentJenis === 'organisasi' ? 'checked' : '' }} onchange="switchJenisPemohon('organisasi')">
-                        <div class="flex items-center space-x-3 w-full">
-                            <div id="radio_dot_organisasi" class="w-4 h-4 rounded-full border flex items-center justify-center shrink-0 {{ $currentJenis === 'organisasi' ? 'border-[#D4AF37]' : 'border-[#444444]' }}">
-                                <div id="radio_inner_organisasi" class="w-2 h-2 rounded-full bg-[#D4AF37] {{ $currentJenis === 'organisasi' ? '' : 'hidden' }}"></div>
+                        <div class="flex items-center space-x-3.5 w-full">
+                            <div id="radio_dot_organisasi" class="w-5 h-5 rounded-full border flex items-center justify-center shrink-0 {{ $currentJenis === 'organisasi' ? 'border-[#D4AF37]' : 'border-[#444444]' }}">
+                                <div id="radio_inner_organisasi" class="w-2.5 h-2.5 rounded-full bg-[#D4AF37] {{ $currentJenis === 'organisasi' ? '' : 'hidden' }}"></div>
                             </div>
                             <div>
-                                <div class="text-xs sm:text-sm font-bold text-white">
+                                <div class="text-sm sm:text-base font-bold text-white">
                                     Organisasi / Ormas / Lembaga
                                 </div>
-                                <p class="text-[11px] text-[#A3A3A3] mt-0.5">Komunitas, Karang Taruna, Yayasan, atau Lembaga berlegalitas resmi.</p>
+                                <p class="text-xs text-[#9E9E9E] mt-1 leading-relaxed">
+                                    Komunitas, Karang Taruna, Yayasan, atau Lembaga berlegalitas resmi.
+                                </p>
                             </div>
                         </div>
                     </label>
 
                     <!-- Opsi Perorangan -->
-                    <label id="card_perorangan" class="relative flex items-start p-4 rounded-2xl border cursor-pointer transition-all {{ $currentJenis === 'perorangan' ? 'bg-[#D4AF37]/10 border-[#D4AF37]' : 'bg-[#0B0B0B] border-[#2A2A2A] hover:border-[#3A3A3A]' }}">
+                    <label id="card_perorangan" class="relative flex items-start p-5 rounded-2xl border cursor-pointer transition-all duration-200 {{ $currentJenis === 'perorangan' ? 'bg-[#D4AF37]/5 border-[#D4AF37] shadow-sm shadow-[#D4AF37]/10' : 'bg-[#0E0E0E] border-[#2A2A2A] hover:border-[#383838]' }}">
                         <input type="radio" name="jenis_pemohon" value="perorangan" class="sr-only" {{ $currentJenis === 'perorangan' ? 'checked' : '' }} onchange="switchJenisPemohon('perorangan')">
-                        <div class="flex items-center space-x-3 w-full">
-                            <div id="radio_dot_perorangan" class="w-4 h-4 rounded-full border flex items-center justify-center shrink-0 {{ $currentJenis === 'perorangan' ? 'border-[#D4AF37]' : 'border-[#444444]' }}">
-                                <div id="radio_inner_perorangan" class="w-2 h-2 rounded-full bg-[#D4AF37] {{ $currentJenis === 'perorangan' ? '' : 'hidden' }}"></div>
+                        <div class="flex items-center space-x-3.5 w-full">
+                            <div id="radio_dot_perorangan" class="w-5 h-5 rounded-full border flex items-center justify-center shrink-0 {{ $currentJenis === 'perorangan' ? 'border-[#D4AF37]' : 'border-[#444444]' }}">
+                                <div id="radio_inner_perorangan" class="w-2.5 h-2.5 rounded-full bg-[#D4AF37] {{ $currentJenis === 'perorangan' ? '' : 'hidden' }}"></div>
                             </div>
                             <div>
-                                <div class="text-xs sm:text-sm font-bold text-white">
+                                <div class="text-sm sm:text-base font-bold text-white">
                                     Perorangan
                                 </div>
-                                <p class="text-[11px] text-[#A3A3A3] mt-0.5">Warga masyarakat perorangan ber-KTP Kabupaten Murung Raya.</p>
+                                <p class="text-xs text-[#9E9E9E] mt-1 leading-relaxed">
+                                    Warga masyarakat perorangan ber-KTP Kabupaten Murung Raya.
+                                </p>
                             </div>
                         </div>
                     </label>
@@ -173,28 +177,28 @@
             </div>
 
             <!-- Field Dinamis Sesuai Jenis Pemohon -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 pt-1">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
                 <!-- Field Nama Organisasi / Lembaga (Hanya untuk Organisasi) -->
                 <div id="container_nama_lembaga" class="{{ $currentJenis === 'organisasi' ? '' : 'hidden' }}">
-                    <label for="nama_lembaga" class="block text-xs font-bold uppercase tracking-wider text-[#A3A3A3] mb-1.5">
+                    <label for="nama_lembaga" class="block text-xs font-bold uppercase tracking-wider text-[#C0C0C0] mb-2">
                         Nama Organisasi / Lembaga <span class="text-[#D4AF37]">*</span>
                     </label>
                     <input type="text" name="nama_lembaga" id="nama_lembaga" value="{{ old('nama_lembaga', $profile->nama_lembaga) }}"
                            placeholder="Contoh: Karang Taruna Mura Bersatu"
-                           class="w-full px-4 py-2.5 bg-[#0B0B0B] border border-[#2A2A2A] text-white rounded-xl text-xs sm:text-sm focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] outline-none transition-all">
-                    <p class="text-[11px] text-[#737373] mt-1">Nama resmi organisasi/lembaga pemohon sesuai berkas pengesahan.</p>
+                           class="w-full px-4 py-3 bg-[#0E0E0E] border border-[#2A2A2A] text-white rounded-xl text-sm focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] outline-none transition-all">
+                    <p class="text-xs text-[#808080] mt-1.5">Nama resmi organisasi/lembaga pemohon sesuai berkas pengesahan.</p>
                     @error('nama_lembaga') <p class="text-xs text-rose-400 mt-1">{{ $message }}</p> @enderror
                 </div>
 
                 <!-- Field Nomor Identitas (Legalitas untuk Organisasi, NIK untuk Perorangan) -->
-                <div id="container_nomor_identitas" class="{{ $currentJenis === 'organisasi' ? '' : 'sm:col-span-2' }}">
-                    <label id="label_nomor_identitas" for="nomor_identitas" class="block text-xs font-bold uppercase tracking-wider text-[#A3A3A3] mb-1.5">
+                <div id="container_nomor_identitas" class="{{ $currentJenis === 'organisasi' ? '' : 'md:col-span-2' }}">
+                    <label id="label_nomor_identitas" for="nomor_identitas" class="block text-xs font-bold uppercase tracking-wider text-[#C0C0C0] mb-2">
                         {{ $currentJenis === 'organisasi' ? 'Nomor Legalitas / SK / Izin Resmi' : 'Nomor Induk Kependudukan (NIK)' }}
                     </label>
                     <input type="text" name="nomor_identitas" id="nomor_identitas" value="{{ old('nomor_identitas', $profile->nomor_identitas) }}"
                            placeholder="{{ $currentJenis === 'organisasi' ? 'Contoh: SK-01/MURA/2026 atau No. Akta Notaris' : 'Contoh: 621201xxxxxxxxxx (16 digit NIK KTP)' }}"
-                           class="w-full px-4 py-2.5 bg-[#0B0B0B] border border-[#2A2A2A] text-white rounded-xl text-xs sm:text-sm focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] outline-none transition-all">
-                    <p id="helper_nomor_identitas" class="text-[11px] text-[#737373] mt-1">
+                           class="w-full px-4 py-3 bg-[#0E0E0E] border border-[#2A2A2A] text-white rounded-xl text-sm focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] outline-none transition-all">
+                    <p id="helper_nomor_identitas" class="text-xs text-[#808080] mt-1.5">
                         {{ $currentJenis === 'organisasi' ? 'Nomor SK kepengurusan, izin operasional, atau akta pendirian resmi.' : 'Nomor Induk Kependudukan (NIK) resmi sesuai KTP pemohon di Kab. Murung Raya.' }}
                     </p>
                     @error('nomor_identitas') <p class="text-xs text-rose-400 mt-1">{{ $message }}</p> @enderror
@@ -202,109 +206,121 @@
             </div>
         </div>
 
-        <!-- SECTION 3: KONTAK & ALAMAT -->
-        <div class="p-6 sm:p-8 rounded-3xl bg-[#151515] border border-[#2A2A2A] shadow-xl space-y-5">
-            <div class="flex items-center space-x-3 border-b border-[#2A2A2A] pb-4">
-                <div class="w-8 h-8 rounded-xl bg-[#0B0B0B] border border-[#D4AF37]/30 text-[#D4AF37] flex items-center justify-center text-xs font-black shrink-0">
-                    3
-                </div>
+        <!-- CARD 3 — KONTAK & ALAMAT DOMISILI -->
+        <div class="p-6 sm:p-8 rounded-[18px] bg-[#151515] border border-[#2A2A2A] shadow-xl">
+            <!-- Header Card -->
+            <div class="border-b border-[#2A2A2A] pb-4 mb-6 flex items-start space-x-3.5">
+                <span class="px-2.5 py-1 rounded-lg bg-[#0B0B0B] border border-[#D4AF37]/40 text-[#D4AF37] font-mono text-xs font-black tracking-wider shadow-inner shrink-0 mt-0.5">
+                    03
+                </span>
                 <div>
-                    <h2 class="text-sm sm:text-base font-bold text-white uppercase tracking-wider">Kontak & Alamat Domisili</h2>
-                    <p class="text-[11px] text-[#A3A3A3]">Data kontak dan alamat lengkap untuk koordinasi administrasi usulan proposal.</p>
+                    <h2 class="text-base sm:text-lg font-extrabold text-white tracking-wide uppercase">
+                        Kontak & Alamat Domisili
+                    </h2>
+                    <p class="text-xs sm:text-sm text-[#A3A3A3] mt-1 leading-relaxed">
+                        Data kontak dan alamat sekretariat/domisili di wilayah Kabupaten Murung Raya.
+                    </p>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Nomor WhatsApp / Telepon -->
-                <div class="sm:col-span-2">
-                    <label for="no_telepon" class="block text-xs font-bold uppercase tracking-wider text-[#A3A3A3] mb-1.5">
+                <div class="md:col-span-2">
+                    <label for="no_telepon" class="block text-xs font-bold uppercase tracking-wider text-[#C0C0C0] mb-2">
                         Nomor WhatsApp / Telepon Aktif <span class="text-[#D4AF37]">*</span>
                     </label>
                     <input type="text" name="no_telepon" id="no_telepon" value="{{ old('no_telepon', $user->no_telepon) }}" required
                            placeholder="Contoh: 085249001122"
-                           class="w-full px-4 py-2.5 bg-[#0B0B0B] border border-[#2A2A2A] text-white rounded-xl text-xs sm:text-sm focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] outline-none transition-all">
-                    <p class="text-[11px] text-[#737373] mt-1">Pastikan nomor aktif dan terhubung dengan WhatsApp untuk koordinasi kedinasan.</p>
+                           class="w-full px-4 py-3 bg-[#0E0E0E] border border-[#2A2A2A] text-white rounded-xl text-sm focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] outline-none transition-all">
+                    <p class="text-xs text-[#808080] mt-1.5">Pastikan nomor aktif dan terhubung ke WhatsApp untuk koordinasi kedinasan.</p>
                     @error('no_telepon') <p class="text-xs text-rose-400 mt-1">{{ $message }}</p> @enderror
                 </div>
 
                 <!-- Alamat Lengkap Domisili -->
-                <div class="sm:col-span-2">
-                    <label for="alamat" class="block text-xs font-bold uppercase tracking-wider text-[#A3A3A3] mb-1.5">
+                <div class="md:col-span-2">
+                    <label for="alamat" class="block text-xs font-bold uppercase tracking-wider text-[#C0C0C0] mb-2">
                         Alamat Lengkap di Kabupaten Murung Raya
                     </label>
-                    <textarea name="alamat" id="alamat" rows="3"
+                    <textarea name="alamat" id="alamat" rows="4"
                               placeholder="Contoh: Jl. Jenderal Sudirman No. 45, RT 04 / RW 02, Kelurahan Beriwit, Kecamatan Murung, Kabupaten Murung Raya"
-                              class="w-full px-4 py-2.5 bg-[#0B0B0B] border border-[#2A2A2A] text-white rounded-xl text-xs sm:text-sm focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] outline-none transition-all leading-relaxed">{{ old('alamat', $profile->alamat) }}</textarea>
-                    <p class="text-[11px] text-[#737373] mt-1">Alamat domisili pemohon atau kantor sekretariat lembaga di wilayah Kabupaten Murung Raya.</p>
+                              class="w-full px-4 py-3 bg-[#0E0E0E] border border-[#2A2A2A] text-white rounded-xl text-sm focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] outline-none transition-all leading-relaxed">{{ old('alamat', $profile->alamat) }}</textarea>
+                    <p class="text-xs text-[#808080] mt-1.5">Alamat domisili pemohon atau kantor sekretariat lembaga di wilayah Kabupaten Murung Raya.</p>
                     @error('alamat') <p class="text-xs text-rose-400 mt-1">{{ $message }}</p> @enderror
                 </div>
             </div>
         </div>
 
-        <!-- SECTION 4: REKENING PENYALURAN -->
-        <div class="p-6 sm:p-8 rounded-3xl bg-[#151515] border border-[#2A2A2A] shadow-xl space-y-5">
-            <div class="flex items-center space-x-3 border-b border-[#2A2A2A] pb-4">
-                <div class="w-8 h-8 rounded-xl bg-[#0B0B0B] border border-[#D4AF37]/30 text-[#D4AF37] flex items-center justify-center text-xs font-black shrink-0">
-                    4
-                </div>
+        <!-- CARD 4 — REKENING PENYALURAN -->
+        <div class="p-6 sm:p-8 rounded-[18px] bg-[#151515] border border-[#2A2A2A] shadow-xl">
+            <!-- Header Card -->
+            <div class="border-b border-[#2A2A2A] pb-4 mb-6 flex items-start space-x-3.5">
+                <span class="px-2.5 py-1 rounded-lg bg-[#0B0B0B] border border-[#D4AF37]/40 text-[#D4AF37] font-mono text-xs font-black tracking-wider shadow-inner shrink-0 mt-0.5">
+                    04
+                </span>
                 <div>
-                    <h2 class="text-sm sm:text-base font-bold text-white uppercase tracking-wider">Rekening Penyaluran</h2>
-                    <p class="text-[11px] text-[#A3A3A3]">Informasi rekening bank resmi pemohon untuk kelengkapan administrasi penyaluran usulan bantuan.</p>
+                    <h2 class="text-base sm:text-lg font-extrabold text-white tracking-wide uppercase">
+                        Rekening Penyaluran
+                    </h2>
+                    <p class="text-xs sm:text-sm text-[#A3A3A3] mt-1 leading-relaxed">
+                        Informasi rekening bank resmi pemohon untuk kelengkapan administrasi bantuan.
+                    </p>
                 </div>
             </div>
 
             <!-- Keterangan Singkat sesuai PRD & Instruksi -->
-            <div class="p-4 rounded-2xl bg-[#0B0B0B] border border-[#2A2A2A] text-xs text-[#A3A3A3] flex items-start space-x-3 leading-relaxed">
-                <div class="text-[#D4AF37] text-base shrink-0 mt-0.5">ℹ️</div>
+            <div class="mb-6 p-4 sm:p-5 rounded-2xl bg-[#0E0E0E] border border-[#2A2A2A] text-xs sm:text-sm text-[#A3A3A3] flex items-start space-x-3.5 leading-relaxed">
+                <div class="w-6 h-6 rounded-lg bg-[#D4AF37]/15 text-[#D4AF37] border border-[#D4AF37]/30 flex items-center justify-center shrink-0 mt-0.5 text-xs font-bold">
+                    i
+                </div>
                 <div>
                     <span class="text-white font-semibold">Pemberitahuan Rekening Penyaluran:</span>
                     Data rekening bank ini digunakan untuk informasi administrasi dan pencatatan penyaluran usulan bantuan/hibah apabila proposal disetujui oleh pimpinan daerah.
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <!-- Nama Bank -->
                 <div>
-                    <label for="nama_bank" class="block text-xs font-bold uppercase tracking-wider text-[#A3A3A3] mb-1.5">
+                    <label for="nama_bank" class="block text-xs font-bold uppercase tracking-wider text-[#C0C0C0] mb-2">
                         Nama Bank
                     </label>
                     <input type="text" name="nama_bank" id="nama_bank" value="{{ old('nama_bank', $profile->nama_bank ?? 'Bank Kalteng Cabang Puruk Cahu') }}"
                            placeholder="Contoh: Bank Kalteng / BRI"
-                           class="w-full px-4 py-2.5 bg-[#0B0B0B] border border-[#2A2A2A] text-white rounded-xl text-xs sm:text-sm focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] outline-none transition-all">
+                           class="w-full px-4 py-3 bg-[#0E0E0E] border border-[#2A2A2A] text-white rounded-xl text-sm focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] outline-none transition-all">
                     @error('nama_bank') <p class="text-xs text-rose-400 mt-1">{{ $message }}</p> @enderror
                 </div>
 
                 <!-- Nomor Rekening -->
                 <div>
-                    <label for="nomor_rekening" class="block text-xs font-bold uppercase tracking-wider text-[#A3A3A3] mb-1.5">
+                    <label for="nomor_rekening" class="block text-xs font-bold uppercase tracking-wider text-[#C0C0C0] mb-2">
                         Nomor Rekening
                     </label>
                     <input type="text" name="nomor_rekening" id="nomor_rekening" value="{{ old('nomor_rekening', $profile->nomor_rekening) }}"
                            placeholder="Contoh: 100-02-005432-1"
-                           class="w-full px-4 py-2.5 bg-[#0B0B0B] border border-[#2A2A2A] text-white rounded-xl text-xs sm:text-sm font-mono focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] outline-none transition-all">
+                           class="w-full px-4 py-3 bg-[#0E0E0E] border border-[#2A2A2A] text-white rounded-xl text-sm font-mono focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] outline-none transition-all">
                     @error('nomor_rekening') <p class="text-xs text-rose-400 mt-1">{{ $message }}</p> @enderror
                 </div>
 
                 <!-- Nama Pemilik Rekening -->
                 <div>
-                    <label for="nama_pemilik_rekening" class="block text-xs font-bold uppercase tracking-wider text-[#A3A3A3] mb-1.5">
+                    <label for="nama_pemilik_rekening" class="block text-xs font-bold uppercase tracking-wider text-[#C0C0C0] mb-2">
                         Nama Pemilik Rekening
                     </label>
                     <input type="text" name="nama_pemilik_rekening" id="nama_pemilik_rekening" value="{{ old('nama_pemilik_rekening', $profile->nama_pemilik_rekening) }}"
                            placeholder="Contoh: Karang Taruna Mura Bersatu"
-                           class="w-full px-4 py-2.5 bg-[#0B0B0B] border border-[#2A2A2A] text-white rounded-xl text-xs sm:text-sm focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] outline-none transition-all">
-                    <p class="text-[11px] text-[#737373] mt-1">Harus sesuai nama pada buku rekening tabungan.</p>
+                           class="w-full px-4 py-3 bg-[#0E0E0E] border border-[#2A2A2A] text-white rounded-xl text-sm focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] outline-none transition-all">
+                    <p class="text-xs text-[#808080] mt-1.5">Harus sesuai nama pada buku rekening tabungan.</p>
                     @error('nama_pemilik_rekening') <p class="text-xs text-rose-400 mt-1">{{ $message }}</p> @enderror
                 </div>
             </div>
         </div>
 
-        <!-- Tombol Aksi / Submit CTA -->
-        <div class="pt-2 flex flex-col sm:flex-row items-center justify-end gap-3.5">
-            <a href="{{ route('dashboard') }}" class="w-full sm:w-auto px-6 py-3 rounded-xl border border-[#2A2A2A] hover:border-[#D4AF37]/40 text-[#A3A3A3] hover:text-white font-bold text-xs sm:text-sm text-center transition-all">
+        <!-- Tombol Aksi / Submit Button Area -->
+        <div class="mt-10 pt-4 flex flex-col sm:flex-row items-center justify-end gap-4">
+            <a href="{{ route('dashboard') }}" class="w-full sm:w-auto px-6 py-3.5 rounded-xl border border-[#2A2A2A] bg-[#151515] hover:bg-[#1E1E1E] hover:border-[#D4AF37]/50 text-[#A3A3A3] hover:text-white font-bold text-sm text-center transition-all">
                 Batal & Kembali
             </a>
-            <button type="submit" class="w-full sm:w-auto px-8 py-3.5 bg-[#D4AF37] hover:bg-[#E6C65C] text-[#0B0B0B] font-extrabold rounded-xl text-xs sm:text-sm shadow-lg shadow-[#D4AF37]/20 transition-all hover:scale-[1.02] flex items-center justify-center space-x-2">
+            <button type="submit" class="w-full sm:w-auto px-8 py-3.5 bg-[#D4AF37] hover:bg-[#E6C65C] text-[#0B0B0B] font-extrabold rounded-xl text-sm shadow-lg shadow-[#D4AF37]/20 transition-all hover:scale-[1.02] flex items-center justify-center space-x-2">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
                 </svg>
@@ -331,22 +347,22 @@ function switchJenisPemohon(jenis) {
 
     if (jenis === 'organisasi') {
         // Style active card Organisasi
-        cardOrg.classList.add('bg-[#D4AF37]/10', 'border-[#D4AF37]');
-        cardOrg.classList.remove('bg-[#0B0B0B]', 'border-[#2A2A2A]');
+        cardOrg.classList.add('bg-[#D4AF37]/5', 'border-[#D4AF37]', 'shadow-sm', 'shadow-[#D4AF37]/10');
+        cardOrg.classList.remove('bg-[#0E0E0E]', 'border-[#2A2A2A]');
         radioDotOrg.classList.add('border-[#D4AF37]');
         radioDotOrg.classList.remove('border-[#444444]');
         radioInnerOrg.classList.remove('hidden');
 
         // Style inactive card Perorangan
-        cardPer.classList.remove('bg-[#D4AF37]/10', 'border-[#D4AF37]');
-        cardPer.classList.add('bg-[#0B0B0B]', 'border-[#2A2A2A]');
+        cardPer.classList.remove('bg-[#D4AF37]/5', 'border-[#D4AF37]', 'shadow-sm', 'shadow-[#D4AF37]/10');
+        cardPer.classList.add('bg-[#0E0E0E]', 'border-[#2A2A2A]');
         radioDotPer.classList.remove('border-[#D4AF37]');
         radioDotPer.classList.add('border-[#444444]');
         radioInnerPer.classList.add('hidden');
 
         // Tampilkan field nama lembaga
         containerLembaga.classList.remove('hidden');
-        containerIdentitas.classList.remove('sm:col-span-2');
+        containerIdentitas.classList.remove('md:col-span-2');
 
         // Update label & placeholder identitas
         labelIdentitas.textContent = 'Nomor Legalitas / SK / Izin Resmi';
@@ -354,22 +370,22 @@ function switchJenisPemohon(jenis) {
         helperIdentitas.textContent = 'Nomor SK kepengurusan, izin operasional, atau akta pendirian resmi.';
     } else {
         // Style active card Perorangan
-        cardPer.classList.add('bg-[#D4AF37]/10', 'border-[#D4AF37]');
-        cardPer.classList.remove('bg-[#0B0B0B]', 'border-[#2A2A2A]');
+        cardPer.classList.add('bg-[#D4AF37]/5', 'border-[#D4AF37]', 'shadow-sm', 'shadow-[#D4AF37]/10');
+        cardPer.classList.remove('bg-[#0E0E0E]', 'border-[#2A2A2A]');
         radioDotPer.classList.add('border-[#D4AF37]');
         radioDotPer.classList.remove('border-[#444444]');
         radioInnerPer.classList.remove('hidden');
 
         // Style inactive card Organisasi
-        cardOrg.classList.remove('bg-[#D4AF37]/10', 'border-[#D4AF37]');
-        cardOrg.classList.add('bg-[#0B0B0B]', 'border-[#2A2A2A]');
+        cardOrg.classList.remove('bg-[#D4AF37]/5', 'border-[#D4AF37]', 'shadow-sm', 'shadow-[#D4AF37]/10');
+        cardOrg.classList.add('bg-[#0E0E0E]', 'border-[#2A2A2A]');
         radioDotOrg.classList.remove('border-[#D4AF37]');
         radioDotOrg.classList.add('border-[#444444]');
         radioInnerOrg.classList.add('hidden');
 
         // Sembunyikan field nama lembaga
         containerLembaga.classList.add('hidden');
-        containerIdentitas.classList.add('sm:col-span-2');
+        containerIdentitas.classList.add('md:col-span-2');
 
         // Update label & placeholder identitas
         labelIdentitas.textContent = 'Nomor Induk Kependudukan (NIK)';
