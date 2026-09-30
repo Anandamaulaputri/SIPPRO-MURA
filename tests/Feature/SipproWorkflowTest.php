@@ -403,4 +403,17 @@ class SipproWorkflowTest extends TestCase
         $response->assertRedirect('/');
         $this->assertGuest();
     }
+
+    public function test_halaman_daftar_proposal_empty_state_rapi_tanpa_tombol_ganda_dan_tanda_plus_tunggal(): void
+    {
+        $user = User::factory()->create(['role' => 'pengusul']);
+        $this->actingAs($user);
+
+        $response = $this->get('/proposals');
+        $response->assertStatus(200);
+        $response->assertSee('Belum Ada Usulan Proposal');
+        $response->assertSee('Buat Usulan Proposal Pertama');
+        $response->assertDontSee('+ +');
+        $response->assertDontSee('<span>+ Buat Usulan Proposal</span>');
+    }
 }

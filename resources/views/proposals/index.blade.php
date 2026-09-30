@@ -3,22 +3,12 @@
 @section('content')
 <div class="py-8 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     
-    <!-- Top Header & Action -->
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-        <div>
-            <h1 class="text-2xl font-black text-white tracking-tight">Daftar Usulan Proposal</h1>
-            <p class="text-xs text-[#A3A3A3] mt-1">
-                {{ auth()->user()->isPengusul() ? 'Kelola dan pantau seluruh proposal bantuan yang Anda ajukan' : 'Daftar seluruh permohonan proposal masuk ke Pemerintah Kabupaten Murung Raya' }}
-            </p>
-        </div>
-
-        @if(auth()->user()->isPengusul())
-            <div>
-                <a href="{{ route('proposals.create') }}" class="inline-flex items-center space-x-2 px-5 py-2.5 bg-[#D4AF37] hover:bg-[#E6C65C] text-[#0B0B0B] font-bold rounded-xl text-xs shadow-md shadow-[#D4AF37]/20 transition-all hover:scale-105">
-                    <span>+ Buat Usulan Proposal</span>
-                </a>
-            </div>
-        @endif
+    <!-- Top Header -->
+    <div class="mb-6">
+        <h1 class="text-2xl font-black text-white tracking-tight">Daftar Usulan Proposal</h1>
+        <p class="text-xs text-[#A3A3A3] mt-1">
+            {{ auth()->user()->isPengusul() ? 'Kelola dan pantau seluruh proposal bantuan yang Anda ajukan' : 'Daftar seluruh permohonan proposal masuk ke Pemerintah Kabupaten Murung Raya' }}
+        </p>
     </div>
 
     <!-- Filter & Search Bar -->
@@ -76,7 +66,7 @@
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4" />
                         </svg>
-                        <span>+ Buat Usulan Proposal Pertama</span>
+                        <span>Buat Usulan Proposal Pertama</span>
                     </a>
                 @endif
             </div>
