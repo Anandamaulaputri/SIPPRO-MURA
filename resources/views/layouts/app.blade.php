@@ -104,13 +104,15 @@
         }
     </style>
 </head>
-<body class="bg-[#0B0B0B] text-white flex flex-col min-h-screen selection:bg-[#D4AF37] selection:text-[#0B0B0B] overflow-x-hidden">
+<body class="bg-[#0B0B0B] text-white selection:bg-[#D4AF37] selection:text-[#0B0B0B] overflow-x-hidden">
 
-    @auth
-        <x-sidebar />
-    @endauth
+    <div class="min-h-screen {{ auth()->check() ? 'flex' : 'flex flex-col' }}">
+        @auth
+            <x-sidebar />
+        @endauth
 
-    <!-- Top Minimalist Government Header -->
+        <div class="flex-1 flex flex-col min-w-0">
+            <!-- Top Minimalist Government Header -->
     <div class="bg-[#080808] text-[#737373] text-[11px] py-1.5 px-4 border-b border-[#2A2A2A]">
         <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-2">
             <div>
@@ -307,8 +309,10 @@
                 <p>&copy; {{ date('Y') }} Pemerintah Kabupaten Murung Raya. Hak Cipta Dilindungi.</p>
                 <p class="text-[#D4AF37]/80">Black Luxury & Gold Executive Theme</p>
             </div>
-        </div>
-    </footer>
+            </div>
+        </footer>
+    </div>
+</div>
 
     @auth
         <!-- Dialog Konfirmasi Logout (Sesuai Standar UX SIPPRO MURA) -->
