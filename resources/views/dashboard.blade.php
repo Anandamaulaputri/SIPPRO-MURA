@@ -174,21 +174,17 @@
         <div class="bg-[#151515] rounded-2xl border border-[#2A2A2A] shadow-md overflow-hidden mb-8">
             <div class="p-5 border-b border-[#2A2A2A] flex justify-between items-center bg-[#181818]">
                 <h2 class="text-base font-extrabold text-white">Riwayat Usulan Proposal Anda</h2>
-                <a href="{{ route('proposals.create') }}" class="text-xs font-bold text-[#D4AF37] hover:text-[#E6C65C] transition-colors">+ Buat Usulan Baru</a>
             </div>
 
             @if($proposals->isEmpty())
-                <div class="p-12 text-center">
-                    <div class="w-14 h-14 rounded-2xl bg-[#1F1F1F] border border-[#2A2A2A] text-[#D4AF37] flex items-center justify-center mx-auto mb-3 text-2xl font-bold">
+                <div class="py-12 px-6 text-center">
+                    <div class="w-12 h-12 rounded-2xl bg-[#1B1B1B] border border-[#2A2A2A] text-[#D4AF37] flex items-center justify-center mx-auto mb-3 text-xl font-bold">
                         📄
                     </div>
-                    <h3 class="text-base font-bold text-white">Belum Ada Proposal</h3>
-                    <p class="text-xs text-[#A3A3A3] max-w-sm mx-auto mt-1 mb-4">
-                        Anda belum pernah mengirimkan proposal bantuan. Silakan klik tombol di bawah untuk membuat usulan baru.
+                    <h3 class="text-sm sm:text-base font-bold text-white">Belum Ada Proposal</h3>
+                    <p class="text-xs text-[#A3A3A3] max-w-md mx-auto mt-1 leading-relaxed">
+                        Anda belum pernah mengirimkan proposal bantuan. Untuk membuat usulan baru, silakan akses menu <span class="text-[#E6C65C] font-semibold">"Ajukan Usulan Baru"</span> pada sidebar kiri.
                     </p>
-                    <a href="{{ route('proposals.create') }}" class="px-5 py-2.5 bg-[#D4AF37] hover:bg-[#E6C65C] text-[#0B0B0B] font-bold text-xs rounded-xl shadow-md transition-all">
-                        Ajukan Proposal Pertama
-                    </a>
                 </div>
             @else
                 <div class="overflow-x-auto">
