@@ -57,6 +57,11 @@
                            class="px-3 py-2 rounded-xl text-xs font-semibold transition-all {{ request()->routeIs('proposals.create') ? 'text-[#D4AF37] bg-[#D4AF37]/10 border border-[#D4AF37]/30' : 'text-[#A3A3A3] hover:text-white hover:bg-[#1F1F1F]' }}">
                             + Ajukan Baru
                         </a>
+
+                        <a href="{{ route('profile.show') }}" 
+                           class="px-3 py-2 rounded-xl text-xs font-semibold transition-all {{ request()->routeIs('profile.*') ? 'text-[#D4AF37] bg-[#D4AF37]/10 border border-[#D4AF37]/30' : 'text-[#A3A3A3] hover:text-white hover:bg-[#1F1F1F]' }}">
+                            Profil Lembaga
+                        </a>
                     @endif
                 @endauth
             </nav>

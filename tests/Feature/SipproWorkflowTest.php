@@ -2,10 +2,13 @@
 
 namespace Tests\Feature;
 
+use App\Models\Category;
 use App\Models\Proposal;
 use App\Models\User;
 use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class SipproWorkflowTest extends TestCase
@@ -131,6 +134,149 @@ class SipproWorkflowTest extends TestCase
         $this->assertDatabaseHas('proposals', [
             'id' => $prop->id,
             'status' => 'disetujui',
+        ]);
+    }
+
+    public function test_halaman_formulir_proposal_menampilkan_tabel_rab_dan_modal_gerbang_cek_ketelitian(): void
+    {
+        $pengusul = User::where('role', 'pengusul')->first();
+        $this->actingAs($pengusul);
+
+        $response = $this->get('/proposals/create');
+        $response->assertStatus(200);
+        $response->assertSee('Tabel Perhitungan Dinamis Rencana Anggaran Biaya (RAB)');
+        $response->assertSee('Gerbang Cek Ketelitian Mandiri');
+        $response->assertSee('modalChecklistKetelitian');
+        $response->assertSee('rabTable');
+        $response->assertSee('Muat Format Contoh');
+    }
+
+    public function test_pengusul_bisa_mengajukan_proposal_dengan_tabel_rab_dinamis_dan_lampiran_lengkap(): void
+    {
+        Storage::fake('public');
+
+        $pengusul = User::where('role', 'pengusul')->first();
+        $this->actingAs($pengusul);
+
+        $category = Category::first();
+
+        $postData = [
+            'category_id' => $category->id,
+            'judul_proposal' => 'Pengadaan Perlengkapan Sanggar Tari Tradisional Murung Raya',
+            'total_anggaran' => 25000000,
+            'lokasi_kegiatan' => 'Gedung Tira Tangka Balang, Puruk Cahu',
+            'tanggal_kegiatan' => now()->addWeeks(2)->format('Y-m-d'),
+            'latar_belakang' => 'Sanggar membutuhkan peremajaan kostum dan instrumen tradisional khas Murung Raya.',
+            'tujuan' => 'Mendukung penampilan seni pelajar di tingkat provinsi Kalimantan Tengah.',
+            'rab_items' => [
+                ['item' => 'Sewa Gedung Latihan', 'volume' => 5, 'satuan' => 'hari', 'biaya' => 1000000],
+                ['item' => 'Kostum Tari Dayak Siang', 'volume' => 10, 'satuan' => 'set', 'biaya' => 1500000],
+                ['item' => 'Konsumsi Peserta', 'volume' => 100, 'satuan' => 'kotak', 'biaya' => 50000],
+            ],
+            'file_proposal' => UploadedFile::fake()->create('proposal_resmi.pdf', 1024, 'application/pdf'),
+            'lampiran_ktp' => UploadedFile::fake()->create('ktp_pemohon.pdf', 500, 'application/pdf'),
+            'lampiran_organisasi' => UploadedFile::fake()->create('sk_organisasi.pdf', 800, 'application/pdf'),
+            'lampiran_rekening' => UploadedFile::fake()->image('buku_rekening.png'),
+        ];
+
+        $response = $this->post('/proposals', $postData);
+
+        $newProposal = Proposal::where('judul_proposal', 'Pengadaan Perlengkapan Sanggar Tari Tradisional Murung Raya')->first();
+        $this->assertNotNull($newProposal);
+
+        $response->assertRedirect('/proposals/'.$newProposal->id);
+        $this->assertEquals('diajukan', $newProposal->status);
+        $this->assertEquals(25000000, $newProposal->total_anggaran);
+        $this->assertStringStartsWith('PROP-', $newProposal->nomor_registrasi);
+
+        // Verifikasi versi aktif dan penyimpanan JSON RAB
+        $version = $newProposal->latestVersion;
+        $this->assertNotNull($version);
+        $this->assertStringContainsString('Sewa Gedung Latihan', $version->rincian_rab);
+        $this->assertStringContainsString('Kostum Tari Dayak Siang', $version->rincian_rab);
+
+        // Verifikasi lampiran
+        $this->assertDatabaseHas('proposal_attachments', [
+            'version_id' => $version->id,
+            'jenis_lampiran' => 'ktp',
+        ]);
+        $this->assertDatabaseHas('proposal_attachments', [
+            'version_id' => $version->id,
+            'jenis_lampiran' => 'akta',
+        ]);
+        $this->assertDatabaseHas('proposal_attachments', [
+            'version_id' => $version->id,
+            'jenis_lampiran' => 'rekening',
+        ]);
+
+        // Verifikasi Activity Log
+        $this->assertDatabaseHas('activity_logs', [
+            'user_id' => $pengusul->id,
+            'aktivitas' => 'Mengajukan Proposal Baru',
+        ]);
+    }
+
+    public function test_pengajuan_proposal_gagal_jika_total_anggaran_di_bawah_minimum(): void
+    {
+        $pengusul = User::where('role', 'pengusul')->first();
+        $this->actingAs($pengusul);
+
+        $category = Category::first();
+
+        $response = $this->post('/proposals', [
+            'category_id' => $category->id,
+            'judul_proposal' => 'Proposal Nominal Tidak Valid',
+            'total_anggaran' => 50000, // Di bawah batas minimum 100000
+            'lokasi_kegiatan' => 'Puruk Cahu',
+            'latar_belakang' => 'Latar belakang singkat',
+            'tujuan' => 'Tujuan singkat',
+        ]);
+
+        $response->assertSessionHasErrors(['total_anggaran']);
+    }
+
+    public function test_bukan_pengusul_tidak_bisa_mengakses_halaman_buat_proposal(): void
+    {
+        $wabup = User::where('role', 'wabup')->first();
+        $this->actingAs($wabup);
+
+        $response = $this->get('/proposals/create');
+        $response->assertRedirect('/proposals');
+        $response->assertSessionHas('error');
+    }
+
+    public function test_halaman_profil_dapat_diakses_dan_diperbarui_oleh_pengusul(): void
+    {
+        $pengusul = User::where('role', 'pengusul')->first();
+        $this->actingAs($pengusul);
+
+        $getProfile = $this->get('/profile');
+        $getProfile->assertStatus(200);
+        $getProfile->assertSee('Profil Pengusul');
+
+        $updateResponse = $this->put('/profile', [
+            'name' => 'Budi Santoso Diperbarui',
+            'no_telepon' => '081234567888',
+            'nama_lembaga' => 'Karang Taruna Mura Hebat',
+            'nomor_identitas' => 'KT-MURA-2026-999',
+            'alamat' => 'Jl. Jenderal Sudirman No. 99, Puruk Cahu',
+            'nama_bank' => 'Bank Kalteng Puruk Cahu',
+            'nomor_rekening' => '100-99-887766-5',
+            'nama_pemilik_rekening' => 'Karang Taruna Mura Hebat',
+        ]);
+
+        $updateResponse->assertSessionHas('success');
+
+        $this->assertDatabaseHas('users', [
+            'id' => $pengusul->id,
+            'name' => 'Budi Santoso Diperbarui',
+            'no_telepon' => '081234567888',
+        ]);
+
+        $this->assertDatabaseHas('profiles', [
+            'user_id' => $pengusul->id,
+            'nama_lembaga' => 'Karang Taruna Mura Hebat',
+            'nomor_rekening' => '100-99-887766-5',
         ]);
     }
 }

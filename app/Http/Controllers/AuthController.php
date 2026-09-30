@@ -39,7 +39,7 @@ class AuthController extends Controller
             ]);
 
             return redirect()->intended(route('dashboard'))
-                ->with('success', 'Selamat datang kembali, ' . Auth::user()->name . '!');
+                ->with('success', 'Selamat datang kembali, '.Auth::user()->name.'!');
         }
 
         return back()->withErrors([
@@ -74,11 +74,11 @@ class AuthController extends Controller
         ActivityLog::create([
             'user_id' => $user->id,
             'aktivitas' => 'Quick Demo Login',
-            'keterangan' => 'Login instan sebagai ' . strtoupper($role),
+            'keterangan' => 'Login instan sebagai '.strtoupper($role),
             'ip_address' => $request->ip(),
         ]);
 
-        return redirect()->route('dashboard')->with('success', 'Berhasil masuk sebagai demo ' . strtoupper($role) . ': ' . $user->name);
+        return redirect()->route('dashboard')->with('success', 'Berhasil masuk sebagai demo '.strtoupper($role).': '.$user->name);
     }
 
     public function showRegister()
@@ -154,5 +154,55 @@ class AuthController extends Controller
         $request->session()->regenerateToken();
 
         return redirect()->route('home')->with('info', 'Anda telah berhasil keluar.');
+    }
+
+    public function showProfile()
+    {
+        $user = Auth::user();
+        $profile = $user->profile ?? new Profile;
+
+        return view('auth.profile', compact('user', 'profile'));
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $user = Auth::user();
+
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'no_telepon' => ['required', 'string', 'max:20'],
+            'nama_lembaga' => ['nullable', 'string', 'max:255'],
+            'nomor_identitas' => ['nullable', 'string', 'max:50'],
+            'alamat' => ['nullable', 'string'],
+            'nama_bank' => ['nullable', 'string', 'max:100'],
+            'nomor_rekening' => ['nullable', 'string', 'max:50'],
+            'nama_pemilik_rekening' => ['nullable', 'string', 'max:255'],
+        ]);
+
+        $user->update([
+            'name' => $validated['name'],
+            'no_telepon' => $validated['no_telepon'],
+        ]);
+
+        $user->profile()->updateOrCreate(
+            ['user_id' => $user->id],
+            [
+                'nama_lembaga' => $validated['nama_lembaga'] ?? $user->profile?->nama_lembaga,
+                'nomor_identitas' => $validated['nomor_identitas'] ?? $user->profile?->nomor_identitas,
+                'alamat' => $validated['alamat'] ?? $user->profile?->alamat,
+                'nama_bank' => $validated['nama_bank'] ?? $user->profile?->nama_bank,
+                'nomor_rekening' => $validated['nomor_rekening'] ?? $user->profile?->nomor_rekening,
+                'nama_pemilik_rekening' => $validated['nama_pemilik_rekening'] ?? $user->profile?->nama_pemilik_rekening,
+            ]
+        );
+
+        ActivityLog::create([
+            'user_id' => $user->id,
+            'aktivitas' => 'Memperbarui Profil Pemohon',
+            'keterangan' => 'Memperbarui data identitas pemohon dan rekening penyaluran.',
+            'ip_address' => $request->ip(),
+        ]);
+
+        return back()->with('success', 'Profil berhasil diperbarui!');
     }
 }

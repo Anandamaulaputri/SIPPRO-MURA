@@ -42,6 +42,10 @@ Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->n
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
+    // Profil Pemohon & Rekening
+    Route::get('/profile', [AuthController::class, 'showProfile'])->name('profile.show');
+    Route::put('/profile', [AuthController::class, 'updateProfile'])->name('profile.update');
+
     // Manajemen Proposal
     Route::get('/proposals', [ProposalController::class, 'index'])->name('proposals.index');
     Route::get('/proposals/create', [ProposalController::class, 'create'])->name('proposals.create');

@@ -70,12 +70,47 @@ class ProposalController extends Controller
             'latar_belakang' => ['required', 'string'],
             'tujuan' => ['required', 'string'],
             'rincian_rab' => ['nullable', 'string'],
+            'rab_items' => ['nullable', 'array'],
+            'rab_items.*.item' => ['nullable', 'string', 'max:255'],
+            'rab_items.*.volume' => ['nullable', 'numeric'],
+            'rab_items.*.satuan' => ['nullable', 'string', 'max:50'],
+            'rab_items.*.biaya' => ['nullable', 'numeric'],
             'file_proposal' => ['nullable', 'file', 'mimes:pdf', 'max:10240'], // 10MB max
             'lampiran_ktp' => ['nullable', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:5120'],
             'lampiran_organisasi' => ['nullable', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:10240'],
+            'lampiran_rekening' => ['nullable', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:5120'],
         ]);
 
         return DB::transaction(function () use ($request, $user, $validated) {
+            // Normalisasi Rincian RAB dari tabel dinamis atau input JSON
+            $rabJson = null;
+            if (! empty($request->input('rab_items')) && is_array($request->input('rab_items'))) {
+                $formattedItems = [];
+                foreach ($request->input('rab_items') as $row) {
+                    if (! empty($row['item'])) {
+                        $formattedItems[] = [
+                            'item' => trim($row['item']),
+                            'volume' => isset($row['volume']) ? (int) $row['volume'] : 1,
+                            'satuan' => ! empty($row['satuan']) ? trim($row['satuan']) : 'paket',
+                            'biaya' => isset($row['biaya']) ? (float) $row['biaya'] : 0,
+                        ];
+                    }
+                }
+                if (! empty($formattedItems)) {
+                    $rabJson = json_encode($formattedItems, JSON_UNESCAPED_UNICODE);
+                }
+            }
+
+            if (! $rabJson && ! empty($request->input('rincian_rab'))) {
+                $rawRab = $request->input('rincian_rab');
+                $decoded = json_decode($rawRab, true);
+                if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+                    $rabJson = $rawRab;
+                } else {
+                    $rabJson = $rawRab;
+                }
+            }
+
             // Generate Nomor Registrasi unik: PROP-YYYYMM-XXXX
             $datePrefix = Carbon::now()->format('Ym');
             $lastProposal = Proposal::where('nomor_registrasi', 'like', "PROP-{$datePrefix}-%")->latest('id')->first();
@@ -112,7 +147,7 @@ class ProposalController extends Controller
                 'tujuan' => $validated['tujuan'],
                 'lokasi_kegiatan' => $validated['lokasi_kegiatan'],
                 'tanggal_kegiatan' => $validated['tanggal_kegiatan'] ?? null,
-                'rincian_rab' => $validated['rincian_rab'] ?? null,
+                'rincian_rab' => $rabJson,
                 'file_proposal' => $fileProposalPath,
             ]);
 
@@ -136,6 +171,19 @@ class ProposalController extends Controller
                 ProposalAttachment::create([
                     'version_id' => $version->id,
                     'jenis_lampiran' => 'akta',
+                    'nama_file' => $file->getClientOriginalName(),
+                    'file_path' => $path,
+                    'ukuran_file' => $file->getSize(),
+                ]);
+            }
+
+            // Handle lampiran buku rekening
+            if ($request->hasFile('lampiran_rekening')) {
+                $file = $request->file('lampiran_rekening');
+                $path = $file->store('attachments', 'public');
+                ProposalAttachment::create([
+                    'version_id' => $version->id,
+                    'jenis_lampiran' => 'rekening',
                     'nama_file' => $file->getClientOriginalName(),
                     'file_path' => $path,
                     'ukuran_file' => $file->getSize(),

@@ -62,6 +62,12 @@
                     <span class="text-base">✍️</span>
                     <span>Ajukan Usulan Baru</span>
                 </a>
+
+                <a href="{{ route('profile.show') }}" 
+                   class="flex items-center space-x-3 px-3.5 py-3 rounded-xl transition-all {{ request()->routeIs('profile.*') ? 'bg-[#D4AF37]/15 text-[#D4AF37] border border-[#D4AF37]/40 font-bold' : 'text-[#A3A3A3] hover:text-white hover:bg-[#1A1A1A]' }}">
+                    <span class="text-base">🏢</span>
+                    <span>Profil & Rekening</span>
+                </a>
             @endif
 
             <a href="{{ route('home') }}" 
