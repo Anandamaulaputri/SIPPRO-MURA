@@ -24,7 +24,7 @@
                 <div class="flex items-center space-x-3 px-3 w-full">
                     <span class="text-[#D4AF37] text-lg">🔍</span>
                     <input type="text" name="nomor_registrasi" value="{{ old('nomor_registrasi') }}"
-                           placeholder="Lacak usulan: Masukkan Nomor Registrasi (contoh: PROP-202610-0001)..."
+                           placeholder="Masukkan Nomor Registrasi Proposal (contoh: PROP-202610-0001)..."
                            required
                            class="w-full bg-transparent text-white placeholder-[#737373] text-xs sm:text-sm font-mono outline-none py-2">
                 </div>
