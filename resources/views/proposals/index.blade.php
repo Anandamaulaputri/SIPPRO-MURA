@@ -11,6 +11,19 @@
         </p>
     </div>
 
+    {{-- CTA Card: Only shown when no proposals exist and user is pengusul --}}
+    @if($proposals->isEmpty() && auth()->user()->isPengusul() && !request('search') && !request('status'))
+        <a href="{{ route('proposals.create') }}" class="group inline-flex items-center gap-3 bg-gradient-to-r from-[#D4AF37] to-[#C5A028] px-5 py-3 rounded-xl shadow-md shadow-[#D4AF37]/20 mb-6 hover:from-[#E6C65C] hover:to-[#D4AF37] hover:shadow-lg hover:shadow-[#D4AF37]/30 transition-all duration-300">
+            <svg class="w-4 h-4 text-[#0B0B0B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4" />
+            </svg>
+            <span class="text-sm font-bold text-[#0B0B0B]">Buat Proposal Baru</span>
+            <svg class="w-4 h-4 text-[#0B0B0B]/60 group-hover:translate-x-0.5 transition-transform flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+            </svg>
+        </a>
+    @endif
+
     <!-- Filter & Search Bar -->
     <div class="bg-[#151515] p-4 rounded-2xl border border-[#2A2A2A] shadow-md mb-6">
         <form method="GET" action="{{ route('proposals.index') }}" class="flex flex-col sm:flex-row gap-3">
@@ -50,7 +63,7 @@
                     📑
                 </div>
                 <h3 class="text-sm sm:text-base font-bold text-white">Belum Ada Usulan Proposal</h3>
-                <p class="text-xs text-[#A3A3A3] max-w-sm mx-auto mt-1 mb-5 leading-relaxed">
+                <p class="text-xs text-[#A3A3A3] max-w-sm mx-auto mt-1 mb-4 leading-relaxed">
                     @if(request('search') || request('status'))
                         Tidak ada usulan proposal yang cocok dengan kriteria filter Anda. Silakan ubah atau reset filter.
                     @else
@@ -60,13 +73,6 @@
                 @if(request('search') || request('status'))
                     <a href="{{ route('proposals.index') }}" class="inline-flex items-center space-x-2 px-4 py-2 rounded-xl bg-[#1F1F1F] text-[#D4AF37] hover:text-[#E6C65C] border border-[#2A2A2A] text-xs font-bold transition-all">
                         <span>Reset Filter Pencarian</span>
-                    </a>
-                @elseif(auth()->user()->isPengusul())
-                    <a href="{{ route('proposals.create') }}" class="inline-flex items-center space-x-2 px-5 py-2.5 bg-[#D4AF37] hover:bg-[#E6C65C] text-[#0B0B0B] font-bold text-xs rounded-xl shadow-md transition-all hover:scale-105">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4" />
-                        </svg>
-                        <span>Buat Usulan Proposal Pertama</span>
                     </a>
                 @endif
             </div>
@@ -101,8 +107,17 @@
                                 <td class="py-4 px-4">
                                     <div class="font-bold text-white max-w-sm">{{ $prop->judul_proposal }}</div>
                                     <div class="text-[11px] text-[#A3A3A3] mt-0.5">
-                                        Diajukan: {{ $prop->tanggal_kirim ? $prop->tanggal_kirim->translatedFormat('d M Y') : '-' }}
+                                        Diajukan: {{ $prop->tanggal_kirim ? $prop->tanggal_kirim->translatedFormat('d M Y') : '-' }} &bull; Versi: v{{ $prop->versi_aktif }}.0
                                     </div>
+                                    @php
+                                        $latestReview = $prop->reviewDecisions->where('keputusan', 'perlu_perbaikan')->last() ?? $prop->reviewDecisions->last();
+                                    @endphp
+                                    @if($prop->status === 'perlu_perbaikan' && $latestReview?->catatan_pimpinan)
+                                        <div class="mt-2 p-2.5 rounded-xl bg-amber-950/40 border border-amber-500/30 text-amber-200 text-[11px] leading-relaxed max-w-md">
+                                            <span class="font-bold text-amber-400 block mb-0.5">⚠️ Catatan Wakil Bupati:</span>
+                                            "{{ $latestReview->catatan_pimpinan }}"
+                                        </div>
+                                    @endif
                                 </td>
                                 <td class="py-4 px-4">
                                     <span class="inline-block px-2.5 py-1 rounded-full bg-[#1F1F1F] text-[#A3A3A3] border border-[#2A2A2A] font-medium text-[11px]">
@@ -118,9 +133,18 @@
                                     </span>
                                 </td>
                                 <td class="py-4 px-4 text-right">
-                                    <a href="{{ route('proposals.show', $prop->id) }}" class="px-3.5 py-2 bg-[#1F1F1F] hover:bg-[#252525] text-[#D4AF37] hover:text-[#E6C65C] border border-[#D4AF37]/30 font-bold rounded-xl text-xs transition-all">
-                                        Lihat Detail &rarr;
-                                    </a>
+                                    <div class="flex items-center justify-end space-x-2">
+                                        @if($prop->status === 'perlu_perbaikan' && auth()->user()->isPengusul() && $prop->user_id === auth()->id())
+                                            <a href="{{ route('proposals.revise', $prop->id) }}" 
+                                               class="px-3.5 py-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-[#0B0B0B] font-extrabold rounded-xl text-xs shadow-md shadow-amber-500/20 transition-all hover:scale-105 flex items-center space-x-1.5 whitespace-nowrap">
+                                                <span>✏️</span>
+                                                <span>Ajukan Perbaikan</span>
+                                            </a>
+                                        @endif
+                                        <a href="{{ route('proposals.show', $prop->id) }}" class="px-3.5 py-2 bg-[#1F1F1F] hover:bg-[#252525] text-[#D4AF37] hover:text-[#E6C65C] border border-[#D4AF37]/30 font-bold rounded-xl text-xs transition-all whitespace-nowrap">
+                                            Lihat Detail &rarr;
+                                        </a>
+                                    </div>
                                 </td>
                             </tr>
                         @endforeach

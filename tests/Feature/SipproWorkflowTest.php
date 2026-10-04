@@ -105,7 +105,7 @@ class SipproWorkflowTest extends TestCase
 
         $create = $this->get('/proposals/create');
         $create->assertStatus(200);
-        $create->assertSee('Formulir Pengajuan Proposal Baru');
+        $create->assertSee('Ajukan Usulan Baru');
     }
 
     public function test_staf_admin_tidak_bisa_memberikan_keputusan_proposal(): void
@@ -143,18 +143,20 @@ class SipproWorkflowTest extends TestCase
         ]);
     }
 
-    public function test_halaman_formulir_proposal_menampilkan_tabel_rab_dan_modal_gerbang_cek_ketelitian(): void
+    public function test_halaman_formulir_proposal_menampilkan_form_sederhana_dan_modal_pemeriksaan(): void
     {
         $pengusul = User::where('role', 'pengusul')->first();
         $this->actingAs($pengusul);
 
         $response = $this->get('/proposals/create');
         $response->assertStatus(200);
-        $response->assertSee('Tabel Perhitungan Dinamis Rencana Anggaran Biaya (RAB)');
-        $response->assertSee('Gerbang Cek Ketelitian Mandiri');
+        $response->assertSee('Informasi Proposal');
+        $response->assertSee('Dokumen Proposal Utama');
+        $response->assertSee('Dokumen Pendukung');
         $response->assertSee('modalChecklistKetelitian');
-        $response->assertSee('rabTable');
-        $response->assertSee('Muat Format Contoh');
+        $response->assertSee('Lanjutkan Pemeriksaan');
+        $response->assertSee('Nomor Proposal');
+        $response->assertSee('Perihal Proposal');
     }
 
     public function test_pengusul_bisa_mengajukan_proposal_dengan_tabel_rab_dinamis_dan_lampiran_lengkap(): void
@@ -234,8 +236,6 @@ class SipproWorkflowTest extends TestCase
             'judul_proposal' => 'Proposal Nominal Tidak Valid',
             'total_anggaran' => 50000, // Di bawah batas minimum 100000
             'lokasi_kegiatan' => 'Puruk Cahu',
-            'latar_belakang' => 'Latar belakang singkat',
-            'tujuan' => 'Tujuan singkat',
         ]);
 
         $response->assertSessionHasErrors(['total_anggaran']);
@@ -412,8 +412,7 @@ class SipproWorkflowTest extends TestCase
         $response = $this->get('/proposals');
         $response->assertStatus(200);
         $response->assertSee('Belum Ada Usulan Proposal');
-        $response->assertSee('Buat Usulan Proposal Pertama');
+        $response->assertSee('Buat Proposal Baru');
         $response->assertDontSee('+ +');
-        $response->assertDontSee('<span>+ Buat Usulan Proposal</span>');
     }
 }

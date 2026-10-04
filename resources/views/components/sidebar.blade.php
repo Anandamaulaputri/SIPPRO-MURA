@@ -50,17 +50,17 @@
                 <span>Dashboard</span>
             </a>
 
-            <a href="{{ route('proposals.index') }}" 
-               class="flex items-center space-x-3 px-3.5 py-3 rounded-xl transition-all {{ request()->routeIs('proposals.index') || request()->routeIs('proposals.show') ? 'bg-[#D4AF37]/15 text-[#D4AF37] border border-[#D4AF37]/40 font-bold' : 'text-[#A3A3A3] hover:text-white hover:bg-[#1A1A1A]' }}">
-                <span class="text-base">📑</span>
-                <span>Daftar Proposal</span>
-            </a>
-
             @if($user && $user->isPengusul())
+                <a href="{{ route('proposals.index') }}" 
+                   class="flex items-center space-x-3 px-3.5 py-3 rounded-xl transition-all {{ request()->routeIs('proposals.index') || request()->routeIs('proposals.show') ? 'bg-[#D4AF37]/15 text-[#D4AF37] border border-[#D4AF37]/40 font-bold' : 'text-[#A3A3A3] hover:text-white hover:bg-[#1A1A1A]' }}">
+                    <span class="text-base">📑</span>
+                    <span>Proposal Saya</span>
+                </a>
+
                 <a href="{{ route('proposals.create') }}" 
                    class="flex items-center space-x-3 px-3.5 py-3 rounded-xl transition-all {{ request()->routeIs('proposals.create') ? 'bg-[#D4AF37]/15 text-[#D4AF37] border border-[#D4AF37]/40 font-bold' : 'text-[#A3A3A3] hover:text-white hover:bg-[#1A1A1A]' }}">
                     <span class="text-base">✍️</span>
-                    <span>Ajukan Usulan Baru</span>
+                    <span>Ajukan Proposal</span>
                 </a>
 
                 <a href="{{ route('profile.show') }}" 
@@ -68,12 +68,18 @@
                     <span class="text-base">🏢</span>
                     <span>Profil & Rekening</span>
                 </a>
+            @else
+                <a href="{{ route('proposals.index') }}" 
+                   class="flex items-center space-x-3 px-3.5 py-3 rounded-xl transition-all {{ request()->routeIs('proposals.index') || request()->routeIs('proposals.show') ? 'bg-[#D4AF37]/15 text-[#D4AF37] border border-[#D4AF37]/40 font-bold' : 'text-[#A3A3A3] hover:text-white hover:bg-[#1A1A1A]' }}">
+                    <span class="text-base">📑</span>
+                    <span>Daftar Proposal</span>
+                </a>
             @endif
 
             <a href="{{ route('home') }}" 
                class="flex items-center space-x-3 px-3.5 py-3 rounded-xl text-[#A3A3A3] hover:text-white hover:bg-[#1A1A1A] transition-all">
                 <span class="text-base">🌐</span>
-                <span>Portal Beranda Publik</span>
+                <span>Portal Beranda</span>
             </a>
         </nav>
     </div>

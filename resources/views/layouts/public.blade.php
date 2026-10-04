@@ -106,6 +106,31 @@
                         </p>
                     </div>
                 </a>
+
+                <!-- Header Actions (Lacak Usulan & Auth) -->
+                <div class="flex items-center space-x-2 sm:space-x-3">
+                    <a href="{{ route('tracking.search') }}" 
+                       class="px-3 py-2 rounded-xl text-xs font-bold text-[#D4AF37] hover:text-[#E6C65C] bg-[#1A1A1A]/60 hover:bg-[#1A1A1A] border border-[#D4AF37]/40 hover:border-[#D4AF37] transition-all flex items-center space-x-1.5 shadow-sm">
+                        <span>🔍</span>
+                        <span>Lacak Usulan</span>
+                    </a>
+
+                    @auth
+                        <a href="{{ route('dashboard') }}" 
+                           class="px-4 py-2 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#C5A028] hover:from-[#E6C65C] hover:to-[#D4AF37] text-[#0B0B0B] font-black text-xs shadow-md shadow-[#D4AF37]/20 transition-all hover:scale-105">
+                            Buka Dasbor
+                        </a>
+                    @else
+                        <a href="{{ route('login') }}" 
+                           class="px-3 py-2 text-xs font-bold text-[#A3A3A3] hover:text-white transition-colors">
+                            Masuk
+                        </a>
+                        <a href="{{ route('register') }}" 
+                           class="hidden sm:inline-flex px-4 py-2 rounded-xl bg-[#D4AF37] hover:bg-[#E6C65C] text-[#0B0B0B] font-black text-xs shadow-md shadow-[#D4AF37]/20 transition-all hover:scale-105">
+                            Daftar
+                        </a>
+                    @endauth
+                </div>
             </div>
         </div>
     </header>
@@ -157,6 +182,7 @@
                     <h4 class="text-white font-bold text-xs uppercase tracking-wider mb-3">Tautan Publik</h4>
                     <ul class="space-y-2 text-xs">
                         <li><a href="{{ route('home') }}" class="hover:text-[#D4AF37] transition-colors">Beranda Publik</a></li>
+                        <li><a href="{{ route('tracking.search') }}" class="hover:text-[#D4AF37] text-[#D4AF37]/90 transition-colors">Lacak Status Proposal</a></li>
                         <li><a href="{{ route('login') }}" class="hover:text-[#D4AF37] transition-colors">Masuk ke Sistem</a></li>
                         <li><a href="{{ route('register') }}" class="hover:text-[#D4AF37] transition-colors">Daftar Akun Baru</a></li>
                     </ul>

@@ -27,11 +27,11 @@ class ProposalAttachment extends Model
     {
         $bytes = $this->ukuran_file;
         if ($bytes >= 1048576) {
-            return number_format($bytes / 1048576, 2) . ' MB';
+            return number_format($bytes / 1048576, 2).' MB';
         } elseif ($bytes >= 1024) {
-            return number_format($bytes / 1024, 1) . ' KB';
+            return number_format($bytes / 1024, 1).' KB';
         } elseif ($bytes > 1) {
-            return $bytes . ' bytes';
+            return $bytes.' bytes';
         } elseif ($bytes == 1) {
             return '1 byte';
         } else {

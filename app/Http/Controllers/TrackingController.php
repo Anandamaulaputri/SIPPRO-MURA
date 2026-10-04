@@ -12,7 +12,11 @@ class TrackingController extends Controller
         $nomorRegistrasi = trim($request->input('nomor_registrasi', ''));
 
         if (empty($nomorRegistrasi)) {
-            return redirect()->route('home')->with('error', 'Silakan masukkan nomor registrasi proposal yang ingin dilacak.');
+            if ($request->isMethod('post')) {
+                return back()->with('error', 'Silakan masukkan nomor registrasi proposal yang ingin dilacak.');
+            }
+
+            return view('tracking.search');
         }
 
         $proposal = Proposal::with([
@@ -21,11 +25,11 @@ class TrackingController extends Controller
             'latestVersion.attachments',
             'reviewDecisions.reviewer',
         ])
-        ->where('nomor_registrasi', $nomorRegistrasi)
-        ->first();
+            ->where('nomor_registrasi', $nomorRegistrasi)
+            ->first();
 
         if (! $proposal) {
-            return redirect()->route('home')
+            return back()
                 ->with('error', "Proposal dengan nomor registrasi '{$nomorRegistrasi}' tidak ditemukan. Mohon periksa kembali nomor registrasi Anda.")
                 ->withInput();
         }

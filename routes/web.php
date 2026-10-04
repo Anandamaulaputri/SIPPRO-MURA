@@ -52,6 +52,14 @@ Route::middleware('auth')->group(function () {
     Route::post('/proposals', [ProposalController::class, 'store'])->name('proposals.store');
     Route::get('/proposals/{id}', [ProposalController::class, 'show'])->name('proposals.show');
 
+    // Perbaikan / Revisi Proposal (Hak Pengusul saat status perlu_perbaikan)
+    Route::get('/proposals/{id}/revise', [ProposalController::class, 'revise'])
+        ->middleware('role:pengusul')
+        ->name('proposals.revise');
+    Route::post('/proposals/{id}/revise', [ProposalController::class, 'submitRevision'])
+        ->middleware('role:pengusul')
+        ->name('proposals.submit_revision');
+
     // Telaah & Disposisi Pimpinan (Hak Eksklusif Wakil Bupati sesuai PRD)
     Route::post('/proposals/{id}/review', [ProposalController::class, 'review'])
         ->middleware('role:wabup')

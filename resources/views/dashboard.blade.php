@@ -150,6 +150,29 @@
             </div>
         @endif
 
+        <!-- Reminder Jika Ada Proposal Perlu Perbaikan -->
+        @if(($stats['perlu_perbaikan'] ?? 0) > 0)
+            <div class="mb-6 p-5 rounded-2xl bg-amber-950/40 border border-amber-500/50 shadow-lg flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div class="flex items-start sm:items-center space-x-3.5">
+                    <div class="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/40 text-amber-400 flex items-center justify-center text-lg font-bold shrink-0">
+                        ✏️
+                    </div>
+                    <div>
+                        <h3 class="text-xs sm:text-sm font-bold text-white flex items-center space-x-2">
+                            <span>Perhatian: Terdapat Usulan Memerlukan Perbaikan</span>
+                            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">{{ $stats['perlu_perbaikan'] }} Usulan</span>
+                        </h3>
+                        <p class="text-[11px] text-[#D4D4D4] mt-0.5 max-w-xl leading-relaxed">
+                            Pimpinan (Wakil Bupati) telah memberikan arahan perbaikan untuk usulan Anda. Silakan buka catatan telaah dan ajukan pembaruan berkas agar dapat diproses kembali.
+                        </p>
+                    </div>
+                </div>
+                <a href="{{ route('proposals.index') }}" class="shrink-0 px-4 py-2.5 bg-amber-500 hover:bg-amber-400 text-[#0B0B0B] font-bold rounded-xl text-xs transition-all shadow-md shadow-amber-500/20 text-center">
+                    Buka Usulan Perlu Perbaikan &rarr;
+                </a>
+            </div>
+        @endif
+
         <!-- Pengusul KPI Cards -->
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
             <div class="p-5 rounded-2xl bg-[#151515] border border-[#2A2A2A] shadow-xs">
@@ -212,9 +235,16 @@
                                         </span>
                                     </td>
                                     <td class="py-3.5 px-4 text-right">
-                                        <a href="{{ route('proposals.show', $prop->id) }}" class="px-3 py-1.5 bg-[#1F1F1F] hover:bg-[#252525] text-[#D4AF37] hover:text-[#E6C65C] border border-[#D4AF37]/30 font-semibold rounded-lg transition-all text-xs">
-                                            Rincian &rarr;
-                                        </a>
+                                        <div class="flex items-center justify-end space-x-2">
+                                            @if($prop->status === 'perlu_perbaikan')
+                                                <a href="{{ route('proposals.revise', $prop->id) }}" class="px-2.5 py-1.5 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 font-bold rounded-lg transition-all text-xs flex items-center space-x-1">
+                                                    <span>✏️ Perbaiki</span>
+                                                </a>
+                                            @endif
+                                            <a href="{{ route('proposals.show', $prop->id) }}" class="px-3 py-1.5 bg-[#1F1F1F] hover:bg-[#252525] text-[#D4AF37] hover:text-[#E6C65C] border border-[#D4AF37]/30 font-semibold rounded-lg transition-all text-xs">
+                                                Rincian &rarr;
+                                            </a>
+                                        </div>
                                     </td>
                                 </tr>
                             @endforeach

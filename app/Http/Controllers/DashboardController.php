@@ -6,7 +6,6 @@ use App\Models\ActivityLog;
 use App\Models\Category;
 use App\Models\Proposal;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller

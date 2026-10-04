@@ -172,11 +172,31 @@
                             }
                         }
 
-                        // Otomatis fade-out setelah 3 detik (3000ms)
+                        // Otomatis fade-out setelah 6 detik (6000ms) agar pengguna sempat membaca
                         document.addEventListener('DOMContentLoaded', function() {
-                            setTimeout(dismissSuccessToast, 3000);
+                            setTimeout(dismissSuccessToast, 6000);
                         });
                     </script>
+                @endif
+
+                @if($errors->any())
+                    <div class="p-4 mb-4 rounded-2xl bg-[#151515] border border-rose-500/50 text-rose-300 shadow-xl shadow-black/50">
+                        <div class="flex items-start space-x-3">
+                            <div class="text-rose-400 mt-0.5 shrink-0">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </div>
+                            <div class="text-xs">
+                                <p class="font-bold text-rose-200 mb-1">Pengajuan atau formulir belum lengkap / tidak sesuai:</p>
+                                <ul class="list-disc list-inside space-y-0.5 text-rose-300/90">
+                                    @foreach($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                 @endif
 
                 @if(session('error'))
