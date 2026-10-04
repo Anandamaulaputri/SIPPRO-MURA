@@ -349,4 +349,8 @@ def _add_formatted_text(paragraph, text, font_name, font_size):
             r.font.size = font_size
 
 if __name__ == '__main__':
-    build_docx('c:/SIPPRO/PRD_SIPPRO.md', 'c:/SIPPRO/PRD_SIPPRO_MURA.docx')
+    import os
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    md_file = os.path.join(base_dir, 'PRD_SIPPRO.md')
+    docx_file = os.path.join(base_dir, 'PRD_SIPPRO_MURA.docx')
+    build_docx(md_file, docx_file)
