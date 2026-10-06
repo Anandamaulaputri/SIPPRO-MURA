@@ -74,35 +74,48 @@
             </div>
         </div>
 
-        <!-- Priority: Proposals Awaiting Review -->
+        <!-- Priority: Proposals Awaiting Review (Telah Selesai Disposisi TU Pimpinan) -->
         <div class="mb-10 bg-[#151515] rounded-2xl border border-[#2A2A2A] shadow-md overflow-hidden">
             <div class="p-5 bg-[#181818] border-b border-[#2A2A2A] flex justify-between items-center">
                 <div>
                     <h2 class="text-sm sm:text-base font-extrabold text-white flex items-center space-x-2">
-                        <span>⚡ Usulan Masuk Menunggu Disposisi Pimpinan</span>
+                        <span>⚡ Usulan Masuk Siap Ditelaah</span>
                         <span class="px-2 py-0.5 rounded-full bg-[#D4AF37]/20 text-[#E6C65C] border border-[#D4AF37]/40 text-xs font-bold">{{ $pendingProposals->count() }}</span>
                     </h2>
-                    <p class="text-xs text-[#A3A3A3] mt-0.5">Segera berikan telaah dan arahan kebijakan untuk usulan berikut</p>
+                    <p class="text-xs text-[#A3A3A3] mt-0.5">Berkas telah melalui disposisi administrasi Tata Usaha Pimpinan dan siap untuk penetapan kebijakan</p>
                 </div>
             </div>
 
             @if($pendingProposals->isEmpty())
                 <div class="p-8 text-center text-[#A3A3A3]">
-                    <p class="text-xs sm:text-sm">Tidak ada proposal yang sedang menunggu telaah saat ini.</p>
+                    <div class="w-10 h-10 rounded-xl bg-[#1B1B1B] text-[#D4AF37] flex items-center justify-center mx-auto mb-2 text-base font-bold">✓</div>
+                    <p class="text-xs sm:text-sm font-semibold text-white">Tidak ada berkas yang menunggu telaah saat ini.</p>
+                    <p class="text-[11px] text-[#737373] mt-0.5">Seluruh usulan yang telah selesai didisposisi oleh TU Pimpinan telah selesai ditelaah.</p>
                 </div>
             @else
                 <div class="divide-y divide-[#2A2A2A]">
                     @foreach($pendingProposals as $p)
                         <div class="p-5 flex flex-col md:flex-row md:items-center md:justify-between gap-4 hover:bg-[#1A1A1A] transition-colors">
                             <div class="space-y-1">
-                                <div class="flex items-center space-x-2">
+                                <div class="flex flex-wrap items-center gap-2">
                                     <span class="font-mono text-xs font-bold px-2 py-0.5 rounded bg-[#0B0B0B] text-[#D4AF37] border border-[#2A2A2A]">{{ $p->nomor_registrasi }}</span>
                                     <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-[#1F1F1F] text-[#A3A3A3] border border-[#2A2A2A]">{{ $p->category->nama_kategori }}</span>
+                                    <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-950/60 text-blue-400 border border-blue-500/30">
+                                        ✓ Disposisi TU Selesai
+                                    </span>
+                                    @if($p->batas_waktu)
+                                        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full border {{ $p->deadline_color }}">
+                                            ⏰ {{ $p->deadline_label }}
+                                        </span>
+                                    @endif
                                 </div>
                                 <h3 class="text-base font-bold text-white">{{ $p->judul_proposal }}</h3>
                                 <p class="text-xs text-[#A3A3A3]">
                                     Pengusul: <strong class="text-white">{{ $p->user->profile->nama_lembaga ?? $p->user->name }}</strong> &bull;
                                     Diajukan: {{ $p->tanggal_kirim ? $p->tanggal_kirim->translatedFormat('d M Y') : $p->created_at->format('d M Y') }}
+                                    @if($p->batas_waktu)
+                                        &bull; Batas Waktu: <strong class="text-[#E6C65C] font-mono">{{ $p->formatted_batas_waktu }}</strong>
+                                    @endif
                                 </p>
                             </div>
 
@@ -112,7 +125,7 @@
                                     <span class="text-sm sm:text-base font-black text-[#D4AF37]">{{ $p->formatted_anggaran }}</span>
                                 </div>
                                 <a href="{{ route('proposals.show', $p->id) }}" class="px-4 py-2.5 bg-[#D4AF37] hover:bg-[#E6C65C] text-[#0B0B0B] font-bold text-xs rounded-xl shadow-md shadow-[#D4AF37]/20 transition-all flex items-center space-x-1.5 hover:scale-105">
-                                    <span>Telaah & Disposisi</span>
+                                    <span>Buka & Telaah</span>
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                                     </svg>
@@ -255,7 +268,7 @@
         </div>
     @endif
 
-    <!-- ROLE 3: ADMIN (STAF ADMINISTRASI PIMPINAN) -->
+    <!-- ROLE 3: ADMIN (STAF BAGIAN TATA USAHA PIMPINAN) -->
     @if($user->isAdmin())
         <!-- Admin KPI Grid -->
         <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
@@ -263,9 +276,15 @@
                 <span class="text-[11px] font-bold text-[#A3A3A3] uppercase tracking-wider block">Total Usulan</span>
                 <p class="text-2xl font-black text-white mt-1">{{ $stats['total_proposal'] }}</p>
             </div>
-            <div class="p-4 rounded-2xl bg-[#151515] border border-[#2A2A2A] shadow-xs">
-                <span class="text-[11px] font-bold text-[#E6C65C] uppercase tracking-wider block">Menunggu</span>
-                <p class="text-2xl font-black text-[#D4AF37] mt-1">{{ $stats['menunggu_telaah'] }}</p>
+            <div class="p-4 rounded-2xl bg-[#151515] border border-amber-500/40 bg-amber-950/20 shadow-xs">
+                <span class="text-[11px] font-bold text-amber-400 uppercase tracking-wider block">Menunggu Disposisi</span>
+                <p class="text-2xl font-black text-amber-300 mt-1">{{ $stats['menunggu_disposisi'] }}</p>
+                <span class="text-[10px] text-amber-400/80">Pak Haziral (TU)</span>
+            </div>
+            <div class="p-4 rounded-2xl bg-[#151515] border border-blue-500/40 bg-blue-950/20 shadow-xs">
+                <span class="text-[11px] font-bold text-blue-400 uppercase tracking-wider block">Disposisi Selesai</span>
+                <p class="text-2xl font-black text-blue-300 mt-1">{{ $stats['disposisi_selesai'] }}</p>
+                <span class="text-[10px] text-blue-400/80">Siap telaah Wabup</span>
             </div>
             <div class="p-4 rounded-2xl bg-[#151515] border border-[#2A2A2A] shadow-xs">
                 <span class="text-[11px] font-bold text-emerald-400 uppercase tracking-wider block">Disetujui</span>
@@ -276,20 +295,149 @@
                 <p class="text-2xl font-black text-amber-400 mt-1">{{ $stats['perlu_perbaikan'] }}</p>
             </div>
             <div class="p-4 rounded-2xl bg-[#151515] border border-[#2A2A2A] shadow-xs">
-                <span class="text-[11px] font-bold text-blue-400 uppercase tracking-wider block">Pengusul</span>
-                <p class="text-2xl font-black text-blue-400 mt-1">{{ $stats['total_pengusul'] }}</p>
-            </div>
-            <div class="p-4 rounded-2xl bg-[#151515] border border-[#2A2A2A] shadow-xs">
-                <span class="text-[11px] font-bold text-[#D4AF37] uppercase tracking-wider block">Realisasi</span>
-                <p class="text-lg font-black text-[#D4AF37] mt-1">Rp {{ number_format($stats['total_anggaran_disetujui'] / 1000000, 0) }}M</p>
+                <span class="text-[11px] font-bold text-[#D4AF37] uppercase tracking-wider block">Pengusul</span>
+                <p class="text-2xl font-black text-[#D4AF37] mt-1">{{ $stats['total_pengusul'] }}</p>
             </div>
         </div>
 
-        <!-- Proposals Table for Admin -->
+        <!-- 1. Antrean Menunggu Disposisi Pak Haziral (KSB. Tata Usaha Pimpinan) -->
+        <div class="bg-[#151515] rounded-2xl border-2 border-amber-500/40 shadow-xl overflow-hidden mb-8">
+            <div class="p-5 border-b border-[#2A2A2A] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 bg-[#1A1813]">
+                <div>
+                    <h2 class="text-base font-black text-white flex items-center space-x-2">
+                        <span class="text-amber-400">⏳</span>
+                        <span>Antrean Menunggu Disposisi Tata Usaha Pimpinan</span>
+                        <span class="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 text-xs font-bold">{{ $waitingDispositions->count() }}</span>
+                    </h2>
+                    <p class="text-xs text-[#A3A3A3] mt-0.5">
+                        Berkas usulan masuk yang memerlukan pencatatan lembar disposisi fisik Pak Haziral (KSB. TU Pimpinan)
+                    </p>
+                </div>
+            </div>
+
+            @if($waitingDispositions->isEmpty())
+                <div class="p-8 text-center text-[#A3A3A3]">
+                    <div class="w-10 h-10 rounded-xl bg-[#1B1B1B] text-emerald-400 flex items-center justify-center mx-auto mb-2 text-base font-bold">✓</div>
+                    <p class="text-xs sm:text-sm font-semibold text-white">Tidak ada berkas yang menunggu disposisi saat ini.</p>
+                    <p class="text-[11px] text-[#737373] mt-0.5">Seluruh berkas usulan masuk telah selesai diproses lembar disposisinya.</p>
+                </div>
+            @else
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs">
+                        <thead class="bg-[#111111] text-[#A3A3A3] font-bold uppercase tracking-wider border-b border-[#2A2A2A]">
+                            <tr>
+                                <th class="py-3 px-4">No. Registrasi</th>
+                                <th class="py-3 px-4">Pemohon</th>
+                                <th class="py-3 px-4">Judul Usulan</th>
+                                <th class="py-3 px-4">Anggaran</th>
+                                <th class="py-3 px-4">Tanggal Masuk</th>
+                                <th class="py-3 px-4 text-right">Aksi Administrasi</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-[#2A2A2A]">
+                            @foreach($waitingDispositions as $prop)
+                                <tr class="hover:bg-[#1A1A1A] transition-colors">
+                                    <td class="py-3.5 px-4 font-mono font-bold text-[#D4AF37]">{{ $prop->nomor_registrasi }}</td>
+                                    <td class="py-3.5 px-4">
+                                        <div class="font-bold text-white">{{ $prop->user->profile->nama_lembaga ?? $prop->user->name }}</div>
+                                        <div class="text-[11px] text-[#A3A3A3]">{{ $prop->user->no_telepon }}</div>
+                                    </td>
+                                    <td class="py-3.5 px-4">
+                                        <div class="font-medium text-white max-w-xs truncate">{{ $prop->judul_proposal }}</div>
+                                        <div class="flex flex-wrap items-center gap-1.5 mt-0.5">
+                                            <span class="text-[10px] text-amber-400 font-bold">Versi v{{ $prop->versi_aktif }}.0</span>
+                                            @if($prop->batas_waktu)
+                                                <span class="inline-flex items-center text-[10px] font-bold px-2 py-0.5 rounded-full border {{ $prop->deadline_color }}">
+                                                    ⏰ {{ $prop->deadline_label }}
+                                                </span>
+                                            @endif
+                                        </div>
+                                    </td>
+                                    <td class="py-3.5 px-4 font-semibold text-white">{{ $prop->formatted_anggaran }}</td>
+                                    <td class="py-3.5 px-4 text-[#A3A3A3]">
+                                        <div>{{ $prop->tanggal_kirim ? $prop->tanggal_kirim->translatedFormat('d M Y') : $prop->created_at->format('d M Y') }}</div>
+                                        @if($prop->batas_waktu)
+                                            <div class="text-[10px] text-[#E6C65C] mt-0.5 font-mono">Batas: {{ $prop->formatted_batas_waktu }}</div>
+                                        @endif
+                                    </td>
+                                    <td class="py-3.5 px-4 text-right">
+                                        <a href="{{ route('proposals.show', $prop->id) }}" class="px-3.5 py-1.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black font-extrabold rounded-lg shadow-sm text-xs inline-flex items-center space-x-1.5 transition-all">
+                                            <span>📝</span>
+                                            <span>Catat Disposisi &rarr;</span>
+                                        </a>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @endif
+        </div>
+
+        <!-- 2. Berkas Disposisi Selesai (Diteruskan ke Wakil Bupati) -->
+        <div class="bg-[#151515] rounded-2xl border border-[#2A2A2A] shadow-md overflow-hidden mb-8">
+            <div class="p-5 border-b border-[#2A2A2A] flex justify-between items-center bg-[#181818]">
+                <div>
+                    <h2 class="text-base font-extrabold text-white flex items-center space-x-2">
+                        <span class="text-blue-400">✓</span>
+                        <span>Berkas Disposisi Selesai (Dalam Antrean Telaah Wabup)</span>
+                        <span class="px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/40 text-xs font-bold">{{ $completedDispositions->count() }}</span>
+                    </h2>
+                    <p class="text-xs text-[#A3A3A3] mt-0.5">Berkas yang lembar disposisinya telah dicatat dan kini siap/sedang ditelaah oleh Wakil Bupati</p>
+                </div>
+            </div>
+            @if($completedDispositions->isEmpty())
+                <div class="p-6 text-center text-[#737373] text-xs">
+                    Belum ada berkas yang selesai didisposisi pada tahap ini.
+                </div>
+            @else
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs">
+                        <thead class="bg-[#111111] text-[#A3A3A3] font-bold uppercase tracking-wider border-b border-[#2A2A2A]">
+                            <tr>
+                                <th class="py-3 px-4">No. Registrasi</th>
+                                <th class="py-3 px-4">Pemohon</th>
+                                <th class="py-3 px-4">Judul Usulan</th>
+                                <th class="py-3 px-4">Disposisi & Batas Waktu</th>
+                                <th class="py-3 px-4 text-right">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-[#2A2A2A]">
+                            @foreach($completedDispositions as $prop)
+                                <tr class="hover:bg-[#1A1A1A] transition-colors">
+                                    <td class="py-3 px-4 font-mono font-bold text-[#D4AF37]">{{ $prop->nomor_registrasi }}</td>
+                                    <td class="py-3 px-4 font-medium text-white">{{ $prop->user->profile->nama_lembaga ?? $prop->user->name }}</td>
+                                    <td class="py-3 px-4 text-white max-w-xs truncate">{{ $prop->judul_proposal }}</td>
+                                    <td class="py-3 px-4">
+                                        <span class="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-950/60 text-blue-400 border border-blue-500/30">
+                                            ✓ Siap Ditelaah Wabup
+                                        </span>
+                                        @if($prop->batas_waktu)
+                                            <div class="mt-1">
+                                                <span class="inline-flex items-center text-[10px] font-bold px-2 py-0.5 rounded-full border {{ $prop->deadline_color }}">
+                                                    ⏰ {{ $prop->deadline_label }}
+                                                </span>
+                                            </div>
+                                        @endif
+                                    </td>
+                                    <td class="py-3 px-4 text-right">
+                                        <a href="{{ route('proposals.show', $prop->id) }}" class="px-3 py-1 bg-[#1F1F1F] text-[#D4AF37] hover:bg-[#252525] border border-[#D4AF37]/30 rounded-lg text-xs font-semibold">
+                                            Lihat Berkas &rarr;
+                                        </a>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @endif
+        </div>
+
+        <!-- 3. Proposals Table for Admin (Semua Usulan) -->
         <div class="bg-[#151515] rounded-2xl border border-[#2A2A2A] shadow-md overflow-hidden mb-8">
             <div class="p-5 border-b border-[#2A2A2A] flex justify-between items-center bg-[#181818]">
                 <h2 class="text-base font-extrabold text-white">Seluruh Usulan Proposal Masuk</h2>
-                <a href="{{ route('proposals.index') }}" class="text-xs font-bold text-[#D4AF37] hover:text-[#E6C65C] transition-colors">Kelola Proposal &rarr;</a>
+                <a href="{{ route('proposals.index') }}" class="text-xs font-bold text-[#D4AF37] hover:text-[#E6C65C] transition-colors">Buka Semua Proposal &rarr;</a>
             </div>
             <div class="overflow-x-auto">
                 <table class="w-full text-left text-xs">

@@ -60,7 +60,17 @@ Route::middleware('auth')->group(function () {
         ->middleware('role:pengusul')
         ->name('proposals.submit_revision');
 
-    // Telaah & Disposisi Pimpinan (Hak Eksklusif Wakil Bupati sesuai PRD)
+    // Pencatatan Disposisi Tata Usaha Pimpinan (Pak Haziral) oleh Staf/Admin
+    Route::post('/proposals/{id}/disposition', [ProposalController::class, 'storeDisposition'])
+        ->middleware('role:admin')
+        ->name('proposals.disposition');
+
+    // Penetapan / Pembaruan Batas Waktu Tindak Lanjut oleh Staf/Admin
+    Route::patch('/proposals/{id}/batas-waktu', [ProposalController::class, 'updateDeadline'])
+        ->middleware('role:admin')
+        ->name('proposals.update_deadline');
+
+    // Telaah & Keputusan Pimpinan (Hak Eksklusif Wakil Bupati)
     Route::post('/proposals/{id}/review', [ProposalController::class, 'review'])
         ->middleware('role:wabup')
         ->name('proposals.review');

@@ -23,6 +23,8 @@ class TrackingController extends Controller
             'category',
             'user.profile',
             'latestVersion.attachments',
+            'versions.disposition.petugas',
+            'dispositions.petugas',
             'reviewDecisions.reviewer',
         ])
             ->where('nomor_registrasi', $nomorRegistrasi)

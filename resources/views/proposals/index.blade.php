@@ -32,22 +32,33 @@
                        class="w-full px-3.5 py-2.5 bg-[#0B0B0B] border border-[#2A2A2A] text-white placeholder-[#737373] rounded-xl text-xs focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] outline-none transition-all">
             </div>
 
-            <div class="sm:w-60">
+            <div class="sm:w-52">
                 <select name="status" onchange="this.form.submit()"
                         class="w-full px-3.5 py-2.5 bg-[#0B0B0B] border border-[#2A2A2A] text-white rounded-xl text-xs focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] outline-none transition-all">
                     <option value="">Semua Status</option>
                     <option value="draft" {{ request('status') === 'draft' ? 'selected' : '' }}>Draft</option>
-                    <option value="diajukan" {{ request('status') === 'diajukan' ? 'selected' : '' }}>Diajukan (Menunggu Telaah)</option>
+                    <option value="diajukan" {{ request('status') === 'diajukan' ? 'selected' : '' }}>Diajukan</option>
                     <option value="perlu_perbaikan" {{ request('status') === 'perlu_perbaikan' ? 'selected' : '' }}>Perlu Perbaikan</option>
                     <option value="disetujui" {{ request('status') === 'disetujui' ? 'selected' : '' }}>Disetujui</option>
                     <option value="ditolak" {{ request('status') === 'ditolak' ? 'selected' : '' }}>Ditolak</option>
                 </select>
             </div>
 
+            @if(!auth()->user()->isPengusul())
+                <div class="sm:w-56">
+                    <select name="disposisi" onchange="this.form.submit()"
+                            class="w-full px-3.5 py-2.5 bg-[#0B0B0B] border border-[#2A2A2A] text-white rounded-xl text-xs focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] outline-none transition-all">
+                        <option value="">Semua Tahap Disposisi</option>
+                        <option value="menunggu" {{ request('disposisi') === 'menunggu' ? 'selected' : '' }}>⏳ Menunggu Disposisi</option>
+                        <option value="selesai" {{ request('disposisi') === 'selesai' ? 'selected' : '' }}>✓ Disposisi Selesai (Siap Telaah)</option>
+                    </select>
+                </div>
+            @endif
+
             <button type="submit" class="px-5 py-2.5 bg-[#D4AF37] hover:bg-[#E6C65C] text-[#0B0B0B] font-bold rounded-xl text-xs shadow-md shadow-[#D4AF37]/20 transition-all">
                 Filter
             </button>
-            @if(request('search') || request('status'))
+            @if(request('search') || request('status') || request('disposisi'))
                 <a href="{{ route('proposals.index') }}" class="px-3.5 py-2 text-xs font-semibold text-[#A3A3A3] hover:text-[#D4AF37] self-center transition-colors">
                     Reset
                 </a>
@@ -108,7 +119,17 @@
                                     <div class="font-bold text-white max-w-sm">{{ $prop->judul_proposal }}</div>
                                     <div class="text-[11px] text-[#A3A3A3] mt-0.5">
                                         Diajukan: {{ $prop->tanggal_kirim ? $prop->tanggal_kirim->translatedFormat('d M Y') : '-' }} &bull; Versi: v{{ $prop->versi_aktif }}.0
+                                        @if($prop->batas_waktu)
+                                            &bull; Batas: <span class="text-[#E6C65C] font-mono">{{ $prop->formatted_batas_waktu }}</span>
+                                        @endif
                                     </div>
+                                    @if($prop->batas_waktu)
+                                        <div class="mt-1">
+                                            <span class="inline-flex items-center text-[10px] font-bold px-2 py-0.5 rounded-full border {{ $prop->deadline_color }}">
+                                                ⏰ {{ $prop->deadline_label }}
+                                            </span>
+                                        </div>
+                                    @endif
                                     @php
                                         $latestReview = $prop->reviewDecisions->where('keputusan', 'perlu_perbaikan')->last() ?? $prop->reviewDecisions->last();
                                     @endphp
@@ -131,6 +152,21 @@
                                     <span class="inline-block px-2.5 py-1 rounded-full text-[11px] font-bold border {{ $prop->status_color }}">
                                         {{ $prop->status_label }}
                                     </span>
+                                    @if($prop->status === 'diajukan')
+                                        <div class="mt-1">
+                                            @if($prop->isDisposed())
+                                                <span class="text-[10px] text-blue-400 font-bold flex items-center space-x-1">
+                                                    <span>✓</span>
+                                                    <span>Disposisi TU Selesai</span>
+                                                </span>
+                                            @else
+                                                <span class="text-[10px] text-amber-400 font-bold flex items-center space-x-1">
+                                                    <span>⏳</span>
+                                                    <span>Menunggu Disposisi TU</span>
+                                                </span>
+                                            @endif
+                                        </div>
+                                    @endif
                                 </td>
                                 <td class="py-4 px-4 text-right">
                                     <div class="flex items-center justify-end space-x-2">

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class ProposalVersion extends Model
 {
@@ -44,5 +45,10 @@ class ProposalVersion extends Model
     public function reviewDecisions(): HasMany
     {
         return $this->hasMany(ReviewDecision::class, 'version_id');
+    }
+
+    public function disposition(): HasOne
+    {
+        return $this->hasOne(Disposition::class, 'version_id');
     }
 }

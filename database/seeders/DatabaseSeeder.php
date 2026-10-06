@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\ActivityLog;
 use App\Models\Category;
+use App\Models\Disposition;
 use App\Models\Profile;
 use App\Models\Proposal;
 use App\Models\ProposalAttachment;
@@ -107,6 +108,7 @@ class DatabaseSeeder extends Seeder
             'status' => 'diajukan',
             'versi_aktif' => 1,
             'tanggal_kirim' => Carbon::now()->subHours(6),
+            'batas_waktu' => Carbon::now()->addDays(10),
         ]);
 
         $ver1 = ProposalVersion::create([
@@ -142,6 +144,21 @@ class DatabaseSeeder extends Seeder
             'ukuran_file' => 1240000,
         ]);
 
+        // Disposisi Tata Usaha Pimpinan untuk Proposal 1
+        Disposition::create([
+            'proposal_id' => $prop1->id,
+            'version_id' => $ver1->id,
+            'petugas_id' => $admin->id,
+            'pejabat_disposisi' => 'Haziral, S.E. (KSB. Tata Usaha Pimpinan)',
+            'nomor_surat' => '089/KT-MURA/IX/2026',
+            'tanggal_surat' => Carbon::now()->subHours(5),
+            'asal_surat' => 'Karang Taruna Mura Bersatu',
+            'tujuan_disposisi' => 'Wakil Bupati Murung Raya',
+            'tanggal_disposisi' => Carbon::now()->subHours(2),
+            'catatan_disposisi' => 'Berkas permohonan sarana olahraga pemuda. Administrasi lengkap dan diteruskan ke meja Bapak Wakil Bupati.',
+            'status_disposisi' => 'selesai',
+        ]);
+
         // Proposal 2: Disetujui oleh Wakil Bupati
         $prop2 = Proposal::create([
             'nomor_registrasi' => 'PROP-202609-0002',
@@ -152,6 +169,7 @@ class DatabaseSeeder extends Seeder
             'status' => 'disetujui',
             'versi_aktif' => 1,
             'tanggal_kirim' => Carbon::now()->subDays(5),
+            'batas_waktu' => Carbon::now()->addDays(20),
         ]);
 
         $ver2 = ProposalVersion::create([
@@ -167,6 +185,20 @@ class DatabaseSeeder extends Seeder
                 ['item' => 'Sewa Sound System & Dokumentasi', 'volume' => 1, 'satuan' => 'paket', 'biaya' => 8000000],
             ]),
             'file_proposal' => 'proposals/pelestarian_budaya_dayak.pdf',
+        ]);
+
+        Disposition::create([
+            'proposal_id' => $prop2->id,
+            'version_id' => $ver2->id,
+            'petugas_id' => $admin->id,
+            'pejabat_disposisi' => 'Haziral, S.E. (KSB. Tata Usaha Pimpinan)',
+            'nomor_surat' => '024/ST-MURA/VIII/2026',
+            'tanggal_surat' => Carbon::now()->subDays(6),
+            'asal_surat' => 'Karang Taruna Mura Bersatu',
+            'tujuan_disposisi' => 'Wakil Bupati Murung Raya',
+            'tanggal_disposisi' => Carbon::now()->subDays(4),
+            'catatan_disposisi' => 'Berkas lengkap dan memenuhi syarat administrasi keormasan. Diteruskan ke meja Bapak Wakil Bupati untuk perkenan arahan kebijakan.',
+            'status_disposisi' => 'selesai',
         ]);
 
         ReviewDecision::create([
@@ -188,6 +220,7 @@ class DatabaseSeeder extends Seeder
             'status' => 'perlu_perbaikan',
             'versi_aktif' => 1,
             'tanggal_kirim' => Carbon::now()->subDays(3),
+            'batas_waktu' => Carbon::now()->addDays(5),
         ]);
 
         $ver3 = ProposalVersion::create([
@@ -205,6 +238,20 @@ class DatabaseSeeder extends Seeder
             'file_proposal' => 'proposals/renovasi_musholla.pdf',
         ]);
 
+        Disposition::create([
+            'proposal_id' => $prop3->id,
+            'version_id' => $ver3->id,
+            'petugas_id' => $admin->id,
+            'pejabat_disposisi' => 'Haziral, S.E. (KSB. Tata Usaha Pimpinan)',
+            'nomor_surat' => '012/MAM-BERIWIT/IX/2026',
+            'tanggal_surat' => Carbon::now()->subDays(4),
+            'asal_surat' => 'Pengurus Musholla Al-Muhajirin Desa Beriwit',
+            'tujuan_disposisi' => 'Wakil Bupati Murung Raya',
+            'tanggal_disposisi' => Carbon::now()->subDays(2),
+            'catatan_disposisi' => 'Permohonan bantuan perbaikan tempat ibadah desa. Berkas diteruskan ke meja Bapak Wakil Bupati.',
+            'status_disposisi' => 'selesai',
+        ]);
+
         ReviewDecision::create([
             'proposal_id' => $prop3->id,
             'version_id' => $ver3->id,
@@ -212,6 +259,34 @@ class DatabaseSeeder extends Seeder
             'keputusan' => 'perlu_perbaikan',
             'catatan_pimpinan' => 'Mohon lampirkan foto fisik kondisi atap musholla yang rusak saat ini, serta surat pernyataan hibah/wakaf tanah dari pengurus desa agar memenuhi syarat tertib administrasi bansos.',
             'tanggal_keputusan' => Carbon::now()->subDay(),
+        ]);
+
+        // Proposal 4: Status Diajukan (Menunggu Disposisi Pak Haziral)
+        $prop4 = Proposal::create([
+            'nomor_registrasi' => 'PROP-202609-0004',
+            'user_id' => $pemohon->id,
+            'category_id' => $categories['Sosial Kemasyarakatan']->id,
+            'judul_proposal' => 'Pengadaan Sarana & Alat Kesehatan Posyandu Lansia Sehat Mandiri Puruk Cahu',
+            'total_anggaran' => 20000000,
+            'status' => 'diajukan',
+            'versi_aktif' => 1,
+            'tanggal_kirim' => Carbon::now()->subHours(1),
+            'batas_waktu' => Carbon::now()->addDays(1),
+        ]);
+
+        $ver4 = ProposalVersion::create([
+            'proposal_id' => $prop4->id,
+            'nomor_versi' => 1,
+            'latar_belakang' => 'Peningkatan pelayanan kesehatan bagi lansia dan posyandu swadaya masyarakat.',
+            'tujuan' => 'Menyediakan sarana tensimeter, timbangan, dan nutrisi sehat lansia.',
+            'lokasi_kegiatan' => 'Puruk Cahu, Murung Raya',
+            'tanggal_kegiatan' => Carbon::now()->addWeeks(3),
+            'rincian_rab' => json_encode([
+                ['item' => 'Tensimeter Digital & Timbangan', 'volume' => 5, 'satuan' => 'unit', 'biaya' => 5000000],
+                ['item' => 'Paket Nutrisi PMT Lansia', 'volume' => 100, 'satuan' => 'paket', 'biaya' => 10000000],
+                ['item' => 'Honorarium Petugas Kesehatan', 'volume' => 5, 'satuan' => 'orang', 'biaya' => 5000000],
+            ]),
+            'file_proposal' => 'proposals/posyandu_lansia.pdf',
         ]);
 
         // 4. Log Aktivitas Demo

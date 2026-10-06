@@ -295,9 +295,30 @@ class SipproRevisionTest extends TestCase
         ]);
 
         $wabup = User::where('role', 'wabup')->first();
-        $this->actingAs($wabup);
+        $admin = User::where('role', 'admin')->first();
 
-        // Masuk di dasbor Wabup
+        // 1. Sebelum ada disposisi pada versi baru (v2), Wabup dilarang mereview (403)
+        $this->actingAs($wabup);
+        $forbiddenReview = $this->post(route('proposals.review', $proposal->id), [
+            'keputusan' => 'disetujui',
+            'catatan_pimpinan' => 'Mencoba review v2 sebelum disposisi dicatat',
+        ]);
+        $forbiddenReview->assertStatus(403);
+
+        // 2. Admin mencatat disposisi fisik Pak Haziral untuk versi 2
+        $this->actingAs($admin);
+        $dispositionResponse = $this->post(route('proposals.disposition', $proposal->id), [
+            'nomor_surat' => '005/TU-PIMP/REV/2026',
+            'tanggal_surat' => now()->format('Y-m-d'),
+            'asal_surat' => 'Pengusul Terdaftar',
+            'tujuan_disposisi' => 'Wakil Bupati Murung Raya',
+            'tanggal_disposisi' => now()->format('Y-m-d'),
+            'catatan_disposisi' => 'Berkas perbaikan telah lengkap, diteruskan ke Wabup.',
+        ]);
+        $dispositionResponse->assertRedirect(route('proposals.show', $proposal->id));
+
+        // 3. Setelah disposisi v2 dicatat, Wabup melihat proposal di dashboard antrean telaah
+        $this->actingAs($wabup);
         $dashboard = $this->get(route('dashboard'));
         $dashboard->assertStatus(200);
         $dashboard->assertSee($proposal->nomor_registrasi);

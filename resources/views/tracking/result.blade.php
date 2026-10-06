@@ -38,41 +38,64 @@
             </div>
         </div>
 
-        <!-- Progress Timeline Steps -->
+        <!-- Progress Timeline Steps (Transparansi 4 Tahap) -->
         <div class="p-6 sm:p-8 border-b border-[#2A2A2A] bg-[#151515]">
-            <h2 class="text-xs font-bold uppercase tracking-wider text-[#A3A3A3] mb-6">Tahapan Alur Pelayanan</h2>
+            <h2 class="text-xs font-bold uppercase tracking-wider text-[#A3A3A3] mb-6">Tahapan Alur Pelayanan Administrasi</h2>
 
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 relative">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 relative">
                 <!-- Step 1: Pengajuan -->
                 <div class="p-4 rounded-2xl bg-[#0B0B0B] border border-emerald-500/40 relative">
                     <div class="flex items-center space-x-2 text-emerald-400 font-bold text-xs mb-1">
                         <span>✓ Selesai</span>
                     </div>
-                    <h3 class="text-sm font-bold text-white">1. Pengajuan Dokumen</h3>
+                    <h3 class="text-sm font-bold text-white">1. Pengajuan Usulan</h3>
                     <p class="text-xs text-[#A3A3A3] mt-1">
                         Dikirim pada {{ $proposal->tanggal_kirim ? $proposal->tanggal_kirim->translatedFormat('d M Y, H:i') : $proposal->created_at->format('d M Y') }}
                     </p>
                 </div>
 
-                <!-- Step 2: Telaah Administrasi & Pimpinan -->
-                <div class="p-4 rounded-2xl bg-[#0B0B0B] border {{ $proposal->status === 'diajukan' ? 'border-[#D4AF37]/60' : ($proposal->status === 'draft' ? 'border-[#2A2A2A] opacity-50' : 'border-emerald-500/40') }} relative">
-                    <div class="flex items-center space-x-2 {{ $proposal->status === 'diajukan' ? 'text-[#D4AF37]' : ($proposal->status === 'draft' ? 'text-[#737373]' : 'text-emerald-400') }} font-bold text-xs mb-1">
-                        @if($proposal->status === 'diajukan')
-                            <span class="animate-pulse">● Sedang Berlangsung</span>
-                        @elseif($proposal->status === 'draft')
-                            <span>○ Belum Mulai</span>
+                <!-- Step 2: Disposisi TU Pimpinan (Pak Haziral) -->
+                @php
+                    $isDisposed = $proposal->isDisposed();
+                    $isDecisionMade = in_array($proposal->status, ['disetujui', 'perlu_perbaikan', 'ditolak']);
+                @endphp
+                <div class="p-4 rounded-2xl bg-[#0B0B0B] border {{ ($proposal->status === 'diajukan' && !$isDisposed) ? 'border-amber-500/60' : ($isDisposed || $isDecisionMade ? 'border-emerald-500/40' : 'border-[#2A2A2A] opacity-50') }} relative">
+                    <div class="flex items-center space-x-2 font-bold text-xs mb-1">
+                        @if($isDisposed || $isDecisionMade)
+                            <span class="text-emerald-400">✓ Selesai Disposisi</span>
+                        @elseif($proposal->status === 'diajukan')
+                            <span class="text-amber-400 animate-pulse">● Sedang Berlangsung</span>
                         @else
-                            <span>✓ Selesai Ditelaah</span>
+                            <span class="text-[#737373]">○ Belum Mulai</span>
                         @endif
                     </div>
-                    <h3 class="text-sm font-bold text-white">2. Telaah Pimpinan Daerah</h3>
+                    <h3 class="text-sm font-bold text-white">2. Disposisi TU Pimpinan</h3>
                     <p class="text-xs text-[#A3A3A3] mt-1">
-                        Kajian teknis & rekomendasi Wakil Bupati
+                        Lembar disposisi KSB. Tata Usaha (Pak Haziral)
                     </p>
                 </div>
 
-                <!-- Step 3: Penetapan Keputusan -->
-                <div class="p-4 rounded-2xl bg-[#0B0B0B] border {{ in_array($proposal->status, ['disetujui', 'perlu_perbaikan', 'ditolak']) ? 'border-[#D4AF37]/50' : 'border-[#2A2A2A] opacity-50' }} relative">
+                <!-- Step 3: Telaah Wakil Bupati -->
+                <div class="p-4 rounded-2xl bg-[#0B0B0B] border {{ ($proposal->status === 'diajukan' && $isDisposed) ? 'border-[#D4AF37]/60' : ($isDecisionMade ? 'border-emerald-500/40' : 'border-[#2A2A2A] opacity-50') }} relative">
+                    <div class="flex items-center space-x-2 font-bold text-xs mb-1">
+                        @if($isDecisionMade)
+                            <span class="text-emerald-400">✓ Selesai Ditelaah</span>
+                        @elseif($proposal->status === 'diajukan' && $isDisposed)
+                            <span class="text-[#D4AF37] animate-pulse">● Meja Wakil Bupati</span>
+                        @elseif($proposal->status === 'diajukan' && !$isDisposed)
+                            <span class="text-[#737373]">○ Antrean TU</span>
+                        @else
+                            <span class="text-[#737373]">○ Belum Mulai</span>
+                        @endif
+                    </div>
+                    <h3 class="text-sm font-bold text-white">3. Telaah Wakil Bupati</h3>
+                    <p class="text-xs text-[#A3A3A3] mt-1">
+                        Kajian kebijakan pimpinan daerah
+                    </p>
+                </div>
+
+                <!-- Step 4: Penetapan Keputusan -->
+                <div class="p-4 rounded-2xl bg-[#0B0B0B] border {{ $isDecisionMade ? 'border-[#D4AF37]/50' : 'border-[#2A2A2A] opacity-50' }} relative">
                     <div class="flex items-center space-x-2 font-bold text-xs mb-1">
                         @if($proposal->status === 'disetujui')
                             <span class="text-emerald-400">✓ Disetujui Penuh</span>
@@ -84,9 +107,9 @@
                             <span class="text-[#737373]">○ Menunggu Telaah</span>
                         @endif
                     </div>
-                    <h3 class="text-sm font-bold text-white">3. Disposisi Keputusan</h3>
+                    <h3 class="text-sm font-bold text-white">4. Penetapan Akhir</h3>
                     <p class="text-xs text-[#A3A3A3] mt-1">
-                        Penerbitan arahan tindak lanjut bansos/hibah
+                        Arahan tindak lanjut resmi hibah/bansos
                     </p>
                 </div>
             </div>
@@ -115,7 +138,7 @@
         <!-- Summary Details -->
         <div class="p-6 sm:p-8 bg-[#151515]">
             <h2 class="text-xs font-bold uppercase tracking-wider text-[#A3A3A3] mb-4">Ringkasan Usulan</h2>
-            <dl class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+            <dl class="grid grid-cols-1 sm:grid-cols-2 {{ $proposal->batas_waktu ? 'lg:grid-cols-3' : '' }} gap-4 text-xs">
                 <div class="p-4 rounded-xl bg-[#0B0B0B] border border-[#2A2A2A]">
                     <dt class="text-[#737373] font-medium">Nilai Anggaran Diusulkan</dt>
                     <dd class="text-base font-extrabold text-[#D4AF37] mt-1">{{ $proposal->formatted_anggaran }}</dd>
@@ -124,6 +147,17 @@
                     <dt class="text-[#737373] font-medium">Lokasi Rencana Kegiatan</dt>
                     <dd class="text-sm font-bold text-white mt-1">{{ $proposal->latestVersion?->lokasi_kegiatan ?? 'Kab. Murung Raya' }}</dd>
                 </div>
+                @if($proposal->batas_waktu)
+                    <div class="p-4 rounded-xl bg-[#0B0B0B] border border-[#2A2A2A]">
+                        <dt class="text-[#737373] font-medium">Perkiraan Waktu Pelayanan</dt>
+                        <dd class="text-sm font-bold text-white mt-1 flex flex-wrap items-center gap-1.5">
+                            <span class="font-mono text-[#E6C65C]">{{ $proposal->formatted_batas_waktu }}</span>
+                            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full border {{ $proposal->deadline_color }}">
+                                {{ $proposal->deadline_label }}
+                            </span>
+                        </dd>
+                    </div>
+                @endif
             </dl>
         </div>
     </div>
