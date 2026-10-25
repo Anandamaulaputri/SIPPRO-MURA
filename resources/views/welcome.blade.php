@@ -5,13 +5,13 @@
     <!-- Subtle ambient glow -->
     <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-2xl h-72 bg-[#D4AF37]/5 rounded-full blur-3xl pointer-events-none"></div>
 
-    <div class="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center my-auto">
+    <div class="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center my-auto">
         <!-- Hero Utama -->
         <h1 class="font-extrabold uppercase font-serif tracking-tight leading-tight">
-            <span class="block text-lg sm:text-2xl md:text-3xl lg:text-[2.65rem] xl:text-5xl text-white">
+            <span class="block text-[0.95rem] sm:text-xl md:text-2xl lg:text-[2.15rem] xl:text-[2.45rem] text-white whitespace-nowrap">
                 Sistem Informasi Pelayanan Proposal
             </span>
-            <span class="block text-2xl sm:text-4xl md:text-5xl lg:text-6xl text-[#E6C65C] mt-2 sm:mt-3">
+            <span class="block text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl text-[#E6C65C] mt-2 sm:mt-3">
                 Murung Raya
             </span>
         </h1>
