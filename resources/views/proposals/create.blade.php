@@ -168,7 +168,7 @@
                         <div class="w-9 h-9 rounded-lg bg-[#1A1A1A] border border-[#2A2A2A] flex items-center justify-center text-base flex-shrink-0">🪪</div>
                         <div class="min-w-0">
                             <p class="text-xs font-bold text-white">KTP Penanggung Jawab</p>
-                            <p id="badge_ktp_text" class="text-[11px] text-[#737373] truncate">PDF / JPG / PNG &bull; Maks 5 MB</p>
+                            <p id="badge_ktp_text" class="text-[11px] text-[#737373] truncate">PDF / JPG / PNG &bull; Maks 10 MB</p>
                         </div>
                     </div>
                     <label class="px-3 py-1.5 text-xs font-bold text-[#D4AF37] hover:text-[#E6C65C] bg-[#1F1F1F] rounded-lg border border-[#2A2A2A] cursor-pointer transition-colors flex-shrink-0">
@@ -200,7 +200,7 @@
                         <div class="w-9 h-9 rounded-lg bg-[#1A1A1A] border border-[#2A2A2A] flex items-center justify-center text-base flex-shrink-0">🏦</div>
                         <div class="min-w-0">
                             <p class="text-xs font-bold text-white">Buku Rekening</p>
-                            <p id="badge_rek_text" class="text-[11px] text-[#737373] truncate">PDF / JPG / PNG &bull; Maks 5 MB</p>
+                            <p id="badge_rek_text" class="text-[11px] text-[#737373] truncate">PDF / JPG / PNG &bull; Maks 10 MB</p>
                         </div>
                     </div>
                     <label class="px-3 py-1.5 text-xs font-bold text-[#D4AF37] hover:text-[#E6C65C] bg-[#1F1F1F] rounded-lg border border-[#2A2A2A] cursor-pointer transition-colors flex-shrink-0">
@@ -382,7 +382,7 @@
 
         if (input.files && input.files[0]) {
             const file = input.files[0];
-            const maxMb = input.name === 'lampiran_organisasi' ? 10 : 5;
+            const maxMb = 10;
             if (file.size > maxMb * 1024 * 1024) {
                 alert('Ukuran file ' + file.name + ' (' + (file.size / (1024 * 1024)).toFixed(1) + ' MB) melebihi batas maksimal ' + maxMb + ' MB. Silakan kompres atau pilih berkas yang lebih kecil.');
                 input.value = '';

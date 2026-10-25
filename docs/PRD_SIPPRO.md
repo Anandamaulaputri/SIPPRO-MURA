@@ -214,9 +214,9 @@ Staf tata usaha yang bertugas mengelola ketertiban data dan administrasi persura
 #### FR-03: Modul Unggah Berkas & Lampiran Pendukung
 1. Sistem menyediakan slot unggah berkas proposal utama wajib berformat **PDF** dengan batas ukuran maksimal **10 MB**.
 2. Sistem menyediakan slot unggah berkas pendukung dengan format gambar/dokumen yang sah (PDF, JPG, JPEG, PNG):
-   - KTP Penanggung Jawab (maksimal 5 MB).
+   - KTP Penanggung Jawab (maksimal 10 MB).
    - Legalitas / SK Lembaga / Surat Keterangan (maksimal 10 MB).
-   - Buku Rekening Bank Penyaluran (maksimal 5 MB).
+   - Buku Rekening Bank Penyaluran (maksimal 10 MB).
 3. Berkas tersimpan secara terisolasi pada direktori server lokal aplikasi (`storage/app/public`).
 
 #### FR-04: Modul Checklist Ketelitian Mandiri (Anti-Revisi)
@@ -243,7 +243,7 @@ Staf tata usaha yang bertugas mengelola ketertiban data dan administrasi persura
    - Tanggal Disposisi Fisik
    - Pejabat Disposisi (default: *Haziral, S.E. (KSB. Tata Usaha Pimpinan)*)
    - Catatan / Arahan Disposisi
-   - Unggah Bukti Scan / Foto Lembar Disposisi Fisik (PDF, JPG, JPEG, PNG maksimal 5 MB).
+   - Unggah Bukti Scan / Foto Lembar Disposisi Fisik (PDF, JPG, JPEG, PNG maksimal 10 MB).
 2. Status disposisi dicatat sebagai **`selesai`**.
 3. **Sifat Pasif (Non-Blocking)**: Data disposisi berfungsi murni sebagai arsip riwayat persuratan fisik dan tidak memblokir atau membatasi wewenang penelaahan Wakil Bupati.
 

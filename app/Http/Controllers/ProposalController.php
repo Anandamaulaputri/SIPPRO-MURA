@@ -95,9 +95,9 @@ class ProposalController extends Controller
             'rab_items.*.satuan' => ['nullable', 'string', 'max:50'],
             'rab_items.*.biaya' => ['nullable', 'numeric'],
             'file_proposal' => ['nullable', 'file', 'mimes:pdf', 'max:10240'], // 10MB max
-            'lampiran_ktp' => ['nullable', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:5120'],
+            'lampiran_ktp' => ['nullable', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:10240'],
             'lampiran_organisasi' => ['nullable', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:10240'],
-            'lampiran_rekening' => ['nullable', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:5120'],
+            'lampiran_rekening' => ['nullable', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:10240'],
         ], [
             'judul_proposal.required' => 'Perihal proposal wajib diisi.',
             'total_anggaran.required' => 'Jumlah dana yang diajukan wajib diisi.',
@@ -107,14 +107,14 @@ class ProposalController extends Controller
             'file_proposal.max' => 'Ukuran file proposal maksimal 10 MB.',
             'file_proposal.uploaded' => 'File proposal gagal diunggah (melebihi batas ukuran maksimal 10 MB).',
             'lampiran_ktp.mimes' => 'File lampiran KTP harus berupa PDF, JPG, atau PNG.',
-            'lampiran_ktp.max' => 'Ukuran file lampiran KTP maksimal 5 MB.',
-            'lampiran_ktp.uploaded' => 'Lampiran KTP gagal diunggah (melebihi batas ukuran maksimal 5 MB).',
+            'lampiran_ktp.max' => 'Ukuran file lampiran KTP maksimal 10 MB.',
+            'lampiran_ktp.uploaded' => 'Lampiran KTP gagal diunggah (melebihi batas ukuran maksimal 10 MB).',
             'lampiran_organisasi.mimes' => 'File SK/Organisasi harus berupa PDF, JPG, atau PNG.',
             'lampiran_organisasi.max' => 'Ukuran file SK/Organisasi maksimal 10 MB.',
             'lampiran_organisasi.uploaded' => 'Lampiran SK/Organisasi gagal diunggah (melebihi batas ukuran maksimal 10 MB).',
             'lampiran_rekening.mimes' => 'File buku rekening harus berupa PDF, JPG, atau PNG.',
-            'lampiran_rekening.max' => 'Ukuran file buku rekening maksimal 5 MB.',
-            'lampiran_rekening.uploaded' => 'Lampiran buku rekening gagal diunggah (melebihi batas ukuran maksimal 5 MB).',
+            'lampiran_rekening.max' => 'Ukuran file buku rekening maksimal 10 MB.',
+            'lampiran_rekening.uploaded' => 'Lampiran buku rekening gagal diunggah (melebihi batas ukuran maksimal 10 MB).',
         ]);
 
         return DB::transaction(function () use ($request, $user, $validated) {
@@ -478,13 +478,14 @@ class ProposalController extends Controller
             'tujuan_disposisi' => ['required', 'string', 'max:255'],
             'tanggal_disposisi' => ['required', 'date'],
             'catatan_disposisi' => ['nullable', 'string'],
-            'file_bukti_disposisi' => ['nullable', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:5120'],
+            'file_bukti_disposisi' => ['nullable', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:10240'],
             'batas_waktu' => ['nullable', 'date'],
         ], [
             'tujuan_disposisi.required' => 'Tujuan arahan disposisi wajib diisi.',
             'tanggal_disposisi.required' => 'Tanggal disposisi wajib diisi.',
             'file_bukti_disposisi.mimes' => 'File bukti lembar disposisi harus berformat PDF, JPG, JPEG, atau PNG.',
-            'file_bukti_disposisi.max' => 'Ukuran file lembar disposisi maksimal 5 MB.',
+            'file_bukti_disposisi.max' => 'Ukuran file lembar disposisi maksimal 10 MB.',
+            'file_bukti_disposisi.uploaded' => 'File lembar disposisi gagal diunggah (melebihi batas ukuran maksimal 10 MB).',
         ]);
 
         if ($request->filled('batas_waktu')) {
