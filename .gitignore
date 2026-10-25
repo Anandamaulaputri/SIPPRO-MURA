@@ -29,5 +29,20 @@ Thumbs.db
 __pycache__/
 *.pyc
 
-__pycache__/
-*.pyc
+# ========================================================
+# Berkas Tugas Kuliah, Presentasi, Diagram & Generator Dokumen
+# ========================================================
+/docs/uts/
+/presentasi/
+*.drawio
+docs/PRD_SIPPRO_MURA.docx
+docs/PRD_SIPPRO_MURA1.pdf
+docs/convert_to_docx.py
+docs/build_uts_docx.py
+docs/build_uts_pdf.py
+docs/generate_drawio_diagrams.py
+docs/render_diagrams.py
+docs/render_scale.py
+docs/render_uts_diagrams.py
+docs/proposal masuk staf wabup.txt
+docs/diagrams/
