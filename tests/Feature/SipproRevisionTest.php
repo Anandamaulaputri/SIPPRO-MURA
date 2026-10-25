@@ -295,41 +295,20 @@ class SipproRevisionTest extends TestCase
         ]);
 
         $wabup = User::where('role', 'wabup')->first();
-        $admin = User::where('role', 'admin')->first();
 
-        // 1. Sebelum ada disposisi pada versi baru (v2), Wabup dilarang mereview (403)
-        $this->actingAs($wabup);
-        $forbiddenReview = $this->post(route('proposals.review', $proposal->id), [
-            'keputusan' => 'disetujui',
-            'catatan_pimpinan' => 'Mencoba review v2 sebelum disposisi dicatat',
-        ]);
-        $forbiddenReview->assertStatus(403);
-
-        // 2. Admin mencatat disposisi fisik Pak Haziral untuk versi 2
-        $this->actingAs($admin);
-        $dispositionResponse = $this->post(route('proposals.disposition', $proposal->id), [
-            'nomor_surat' => '005/TU-PIMP/REV/2026',
-            'tanggal_surat' => now()->format('Y-m-d'),
-            'asal_surat' => 'Pengusul Terdaftar',
-            'tujuan_disposisi' => 'Wakil Bupati Murung Raya',
-            'tanggal_disposisi' => now()->format('Y-m-d'),
-            'catatan_disposisi' => 'Berkas perbaikan telah lengkap, diteruskan ke Wabup.',
-        ]);
-        $dispositionResponse->assertRedirect(route('proposals.show', $proposal->id));
-
-        // 3. Setelah disposisi v2 dicatat, Wabup melihat proposal di dashboard antrean telaah
+        // 1. Wabup langsung melihat proposal versi 2 di antrean dashboard
         $this->actingAs($wabup);
         $dashboard = $this->get(route('dashboard'));
         $dashboard->assertStatus(200);
         $dashboard->assertSee($proposal->nomor_registrasi);
 
-        // Detail menampilkan versi 2 aktif dan catatan pemohon
+        // 2. Detail menampilkan versi 2 aktif dan catatan perbaikan pemohon
         $detail = $this->get(route('proposals.show', $proposal->id));
         $detail->assertStatus(200);
         $detail->assertSee('Telah disesuaikan sesuai arahan pimpinan.');
         $detail->assertSee('Keputusan Disposisi Pimpinan');
 
-        // Wabup menyetujui versi 2
+        // 3. Wabup langsung dapat mereview dan menyetujui versi 2 tanpa hambatan disposisi
         $reviewResponse = $this->post(route('proposals.review', $proposal->id), [
             'keputusan' => 'disetujui',
             'catatan_pimpinan' => 'Revisi telah sesuai dan disetujui penuh untuk realisasi.',

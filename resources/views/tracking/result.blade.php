@@ -38,11 +38,14 @@
             </div>
         </div>
 
-        <!-- Progress Timeline Steps (Transparansi 4 Tahap) -->
+        <!-- Progress Timeline Steps (Transparansi 3 Tahap) -->
         <div class="p-6 sm:p-8 border-b border-[#2A2A2A] bg-[#151515]">
             <h2 class="text-xs font-bold uppercase tracking-wider text-[#A3A3A3] mb-6">Tahapan Alur Pelayanan Administrasi</h2>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 relative">
+            @php
+                $isDecisionMade = in_array($proposal->status, ['disetujui', 'perlu_perbaikan', 'ditolak']);
+            @endphp
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 relative">
                 <!-- Step 1: Pengajuan -->
                 <div class="p-4 rounded-2xl bg-[#0B0B0B] border border-emerald-500/40 relative">
                     <div class="flex items-center space-x-2 text-emerald-400 font-bold text-xs mb-1">
@@ -54,47 +57,24 @@
                     </p>
                 </div>
 
-                <!-- Step 2: Disposisi TU Pimpinan (Pak Haziral) -->
-                @php
-                    $isDisposed = $proposal->isDisposed();
-                    $isDecisionMade = in_array($proposal->status, ['disetujui', 'perlu_perbaikan', 'ditolak']);
-                @endphp
-                <div class="p-4 rounded-2xl bg-[#0B0B0B] border {{ ($proposal->status === 'diajukan' && !$isDisposed) ? 'border-amber-500/60' : ($isDisposed || $isDecisionMade ? 'border-emerald-500/40' : 'border-[#2A2A2A] opacity-50') }} relative">
-                    <div class="flex items-center space-x-2 font-bold text-xs mb-1">
-                        @if($isDisposed || $isDecisionMade)
-                            <span class="text-emerald-400">✓ Selesai Disposisi</span>
-                        @elseif($proposal->status === 'diajukan')
-                            <span class="text-amber-400 animate-pulse">● Sedang Berlangsung</span>
-                        @else
-                            <span class="text-[#737373]">○ Belum Mulai</span>
-                        @endif
-                    </div>
-                    <h3 class="text-sm font-bold text-white">2. Disposisi TU Pimpinan</h3>
-                    <p class="text-xs text-[#A3A3A3] mt-1">
-                        Lembar disposisi KSB. Tata Usaha (Pak Haziral)
-                    </p>
-                </div>
-
-                <!-- Step 3: Telaah Wakil Bupati -->
-                <div class="p-4 rounded-2xl bg-[#0B0B0B] border {{ ($proposal->status === 'diajukan' && $isDisposed) ? 'border-[#D4AF37]/60' : ($isDecisionMade ? 'border-emerald-500/40' : 'border-[#2A2A2A] opacity-50') }} relative">
+                <!-- Step 2: Telaah Wakil Bupati -->
+                <div class="p-4 rounded-2xl bg-[#0B0B0B] border {{ ($proposal->status === 'diajukan') ? 'border-[#D4AF37]/60' : ($isDecisionMade ? 'border-emerald-500/40' : 'border-[#2A2A2A] opacity-50') }} relative">
                     <div class="flex items-center space-x-2 font-bold text-xs mb-1">
                         @if($isDecisionMade)
                             <span class="text-emerald-400">✓ Selesai Ditelaah</span>
-                        @elseif($proposal->status === 'diajukan' && $isDisposed)
+                        @elseif($proposal->status === 'diajukan')
                             <span class="text-[#D4AF37] animate-pulse">● Meja Wakil Bupati</span>
-                        @elseif($proposal->status === 'diajukan' && !$isDisposed)
-                            <span class="text-[#737373]">○ Antrean TU</span>
                         @else
                             <span class="text-[#737373]">○ Belum Mulai</span>
                         @endif
                     </div>
-                    <h3 class="text-sm font-bold text-white">3. Telaah Wakil Bupati</h3>
+                    <h3 class="text-sm font-bold text-white">2. Telaah Wakil Bupati</h3>
                     <p class="text-xs text-[#A3A3A3] mt-1">
                         Kajian kebijakan pimpinan daerah
                     </p>
                 </div>
 
-                <!-- Step 4: Penetapan Keputusan -->
+                <!-- Step 3: Penetapan Keputusan -->
                 <div class="p-4 rounded-2xl bg-[#0B0B0B] border {{ $isDecisionMade ? 'border-[#D4AF37]/50' : 'border-[#2A2A2A] opacity-50' }} relative">
                     <div class="flex items-center space-x-2 font-bold text-xs mb-1">
                         @if($proposal->status === 'disetujui')
@@ -107,7 +87,7 @@
                             <span class="text-[#737373]">○ Menunggu Telaah</span>
                         @endif
                     </div>
-                    <h3 class="text-sm font-bold text-white">4. Penetapan Akhir</h3>
+                    <h3 class="text-sm font-bold text-white">3. Penetapan Akhir</h3>
                     <p class="text-xs text-[#A3A3A3] mt-1">
                         Arahan tindak lanjut resmi hibah/bansos
                     </p>

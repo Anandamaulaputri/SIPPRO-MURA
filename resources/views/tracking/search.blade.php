@@ -24,7 +24,7 @@
             Pelacakan Status Usulan <span class="text-[#E6C65C]">Proposal</span>
         </h1>
         <p class="text-xs sm:text-sm text-[#A3A3A3] max-w-xl mx-auto leading-relaxed mb-8">
-            Pantau secara langsung alur disposisi, catatan pimpinan, dan status terkini surat permohonan Anda tanpa perlu datang ke kantor Setda.
+            Pantau secara langsung telaah usulan, catatan pimpinan, dan status terkini proposal permohonan Anda tanpa perlu datang ke kantor Setda.
         </p>
 
         <!-- Kotak Pencarian Lacak Proposal -->
@@ -58,7 +58,7 @@
                 <div class="text-[#D4AF37] text-lg mb-1.5">2️⃣</div>
                 <h4 class="text-xs font-bold text-white mb-1">Status Real-time</h4>
                 <p class="text-[11px] text-[#737373] leading-relaxed">
-                    Lihat timeline apakah berkas sedang ditelaah staf, diproses Wakil Bupati, atau sudah disetujui.
+                    Lihat timeline apakah berkas masuk antrean telaah, sedang diproses Wakil Bupati, atau sudah disetujui.
                 </p>
             </div>
 

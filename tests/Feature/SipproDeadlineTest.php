@@ -3,7 +3,6 @@
 namespace Tests\Feature;
 
 use App\Models\Category;
-use App\Models\Disposition;
 use App\Models\Proposal;
 use App\Models\ProposalVersion;
 use App\Models\User;
@@ -250,8 +249,8 @@ class SipproDeadlineTest extends TestCase
         $wabup = User::where('role', 'wabup')->first();
         $this->actingAs($wabup);
 
-        // Pastikan ada proposal diajukan yang sudah selesai disposisi
-        $proposal = Proposal::where('status', 'diajukan')->disposed()->first();
+        // Pastikan ada proposal diajukan yang masuk ke antrean telaah Wabup
+        $proposal = Proposal::where('status', 'diajukan')->first();
         $this->assertNotNull($proposal);
         $proposal->update(['batas_waktu' => Carbon::now()->addDays(4)]);
 
@@ -274,8 +273,8 @@ class SipproDeadlineTest extends TestCase
         $wabup = User::where('role', 'wabup')->first();
         $this->actingAs($wabup);
 
-        // Buat 2 proposal dengan disposisi selesai tapi deadline berbeda
-        $propA = Proposal::where('status', 'diajukan')->disposed()->first();
+        // Buat 2 proposal dengan deadline berbeda
+        $propA = Proposal::where('status', 'diajukan')->first();
         $propA->update(['batas_waktu' => Carbon::now()->addDays(9)]); // Deadline lebih lambat
 
         $category = Category::first();
@@ -291,19 +290,10 @@ class SipproDeadlineTest extends TestCase
             'batas_waktu' => Carbon::now()->addDays(1), // Deadline lebih mendesak
         ]);
 
-        $verB = ProposalVersion::create([
+        ProposalVersion::create([
             'proposal_id' => $propB->id,
             'nomor_versi' => 1,
             'lokasi_kegiatan' => 'Puruk Cahu',
-        ]);
-
-        Disposition::create([
-            'proposal_id' => $propB->id,
-            'version_id' => $verB->id,
-            'pejabat_disposisi' => 'Haziral, S.E. (KSB. Tata Usaha Pimpinan)',
-            'tujuan_disposisi' => 'Wakil Bupati Murung Raya',
-            'tanggal_disposisi' => Carbon::now(),
-            'status_disposisi' => 'selesai',
         ]);
 
         // Cek dashboard Wabup: proposal dengan deadline paling dekat (propB) harus muncul
@@ -311,7 +301,7 @@ class SipproDeadlineTest extends TestCase
         $response->assertStatus(200);
 
         // Verifikasi urutan query di model
-        $sorted = Proposal::where('status', 'diajukan')->disposed()->orderByDeadline('asc')->pluck('nomor_registrasi')->toArray();
+        $sorted = Proposal::where('status', 'diajukan')->orderByDeadline('asc')->pluck('nomor_registrasi')->toArray();
         $indexB = array_search('PROP-URGENT-001', $sorted);
         $indexA = array_search($propA->nomor_registrasi, $sorted);
 
@@ -359,7 +349,7 @@ class SipproDeadlineTest extends TestCase
         $admin = User::where('role', 'admin')->first();
         $this->actingAs($admin);
 
-        $proposal = Proposal::where('status', 'diajukan')->waitingDisposition()->first();
+        $proposal = Proposal::where('nomor_registrasi', 'PROP-202609-0004')->first();
         $this->assertNotNull($proposal);
 
         $targetDeadline = Carbon::now()->addDays(7)->format('Y-m-d');
@@ -377,7 +367,7 @@ class SipproDeadlineTest extends TestCase
         $response->assertRedirect(route('proposals.show', $proposal->id));
         $proposal->refresh();
 
-        $this->assertTrue($proposal->isDisposed());
+        $this->assertTrue($proposal->hasDisposition());
         $this->assertEquals($targetDeadline, $proposal->batas_waktu->format('Y-m-d'));
     }
 

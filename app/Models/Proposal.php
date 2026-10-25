@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Support\Facades\DB;
 
 class Proposal extends Model
 {
@@ -64,7 +63,7 @@ class Proposal extends Model
         return $this->hasMany(Disposition::class);
     }
 
-    public function isDisposed(): bool
+    public function hasDisposition(): bool
     {
         $activeVer = $this->relationLoaded('versions')
             ? $this->versions->firstWhere('nomor_versi', $this->versi_aktif)
@@ -75,20 +74,14 @@ class Proposal extends Model
         }
 
         if ($activeVer->relationLoaded('disposition')) {
-            return $activeVer->disposition?->status_disposisi === 'selesai';
+            return $activeVer->disposition !== null;
         }
 
         if ($this->relationLoaded('dispositions')) {
-            return $this->dispositions
-                ->where('version_id', $activeVer->id)
-                ->where('status_disposisi', 'selesai')
-                ->isNotEmpty();
+            return $this->dispositions->where('version_id', $activeVer->id)->isNotEmpty();
         }
 
-        return $this->dispositions()
-            ->where('version_id', $activeVer->id)
-            ->where('status_disposisi', 'selesai')
-            ->exists();
+        return $this->dispositions()->where('version_id', $activeVer->id)->exists();
     }
 
     public function getActiveDispositionAttribute(): ?Disposition
@@ -115,12 +108,9 @@ class Proposal extends Model
 
     public function getStatusLabelAttribute(): string
     {
-        if ($this->status === 'diajukan') {
-            return $this->isDisposed() ? 'Disposisi Selesai (Siap Ditelaah)' : 'Menunggu Disposisi';
-        }
-
         return match ($this->status) {
             'draft' => 'Draft (Draf Awal)',
+            'diajukan' => 'Menunggu Telaah Wakil Bupati',
             'perlu_perbaikan' => 'Perlu Perbaikan / Revisi',
             'disetujui' => 'Disetujui',
             'ditolak' => 'Ditolak',
@@ -130,43 +120,14 @@ class Proposal extends Model
 
     public function getStatusColorAttribute(): string
     {
-        if ($this->status === 'diajukan') {
-            return $this->isDisposed()
-                ? 'bg-blue-950/60 text-blue-400 border-blue-500/40'
-                : 'bg-amber-950/60 text-amber-400 border-amber-500/40';
-        }
-
         return match ($this->status) {
             'draft' => 'bg-[#1a1a1a] text-[#a3a3a3] border-[#2a2a2a]',
+            'diajukan' => 'bg-blue-950/60 text-blue-400 border-blue-500/40',
             'perlu_perbaikan' => 'bg-amber-950/60 text-amber-400 border-amber-500/40',
             'disetujui' => 'bg-emerald-950/60 text-emerald-400 border-emerald-500/40',
             'ditolak' => 'bg-rose-950/60 text-rose-400 border-rose-500/40',
             default => 'bg-[#1a1a1a] text-[#a3a3a3] border-[#2a2a2a]',
         };
-    }
-
-    public function scopeDisposed($query)
-    {
-        return $query->whereExists(function ($sub) {
-            $sub->select(DB::raw(1))
-                ->from('dispositions')
-                ->join('proposal_versions', 'proposal_versions.id', '=', 'dispositions.version_id')
-                ->whereColumn('proposal_versions.proposal_id', 'proposals.id')
-                ->whereColumn('proposal_versions.nomor_versi', 'proposals.versi_aktif')
-                ->where('dispositions.status_disposisi', 'selesai');
-        });
-    }
-
-    public function scopeWaitingDisposition($query)
-    {
-        return $query->whereNotExists(function ($sub) {
-            $sub->select(DB::raw(1))
-                ->from('dispositions')
-                ->join('proposal_versions', 'proposal_versions.id', '=', 'dispositions.version_id')
-                ->whereColumn('proposal_versions.proposal_id', 'proposals.id')
-                ->whereColumn('proposal_versions.nomor_versi', 'proposals.versi_aktif')
-                ->where('dispositions.status_disposisi', 'selesai');
-        });
     }
 
     public function getSisaHariAttribute(): ?int

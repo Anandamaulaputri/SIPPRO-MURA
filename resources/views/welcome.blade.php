@@ -35,7 +35,7 @@
             </form>
             <p class="text-[11px] text-[#737373] mt-2.5 text-center flex items-center justify-center space-x-1.5">
                 <span>💡</span>
-                <span>Masyarakat & perwakilan ormas dapat memantau status disposisi surat tanpa harus login.</span>
+                <span>Masyarakat & perwakilan ormas dapat memantau status usulan proposal tanpa harus login.</span>
             </p>
         </div>
 

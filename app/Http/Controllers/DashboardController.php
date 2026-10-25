@@ -39,22 +39,22 @@ class DashboardController extends Controller
         }
 
         // 2. Dashboard untuk Pimpinan (Wakil Bupati)
+        // 2. Dashboard untuk Pimpinan (Wakil Bupati)
         if ($user->isWabup()) {
-            // Hanya tampilkan proposal yang SUDAH selesai disposisi administratif pada versi aktif
-            $pendingProposals = Proposal::with(['user.profile', 'category', 'latestVersion', 'versions.disposition.petugas'])
+            // Seluruh proposal berstatus diajukan langsung masuk ke antrean telaah Wabup
+            $pendingProposals = Proposal::with(['user.profile', 'category', 'latestVersion', 'reviewDecisions.reviewer'])
                 ->where('status', 'diajukan')
-                ->disposed()
                 ->orderByDeadline('asc')
                 ->latest('tanggal_kirim')
                 ->get();
 
-            $proposals = Proposal::with(['user.profile', 'category', 'latestVersion', 'reviewDecisions.reviewer', 'versions.disposition.petugas'])
+            $proposals = Proposal::with(['user.profile', 'category', 'latestVersion', 'reviewDecisions.reviewer'])
                 ->latest()
                 ->take(10)
                 ->get();
 
             $stats = [
-                'menunggu_telaah' => Proposal::where('status', 'diajukan')->disposed()->count(),
+                'menunggu_telaah' => Proposal::where('status', 'diajukan')->count(),
                 'disetujui' => Proposal::where('status', 'disetujui')->count(),
                 'perlu_perbaikan' => Proposal::where('status', 'perlu_perbaikan')->count(),
                 'ditolak' => Proposal::where('status', 'ditolak')->count(),
@@ -69,35 +69,25 @@ class DashboardController extends Controller
             return view('dashboard', compact('user', 'pendingProposals', 'proposals', 'stats', 'recentActivities'));
         }
 
-        // 3. Dashboard untuk Admin (Staf Bagian Tata Usaha Pimpinan)
-        // Proposal yang masuk dan menunggu pencatatan disposisi Pak Haziral
-        $waitingDispositions = Proposal::with(['user.profile', 'category', 'latestVersion'])
+        // 3. Dashboard untuk Admin (Staf Pelayanan Administrasi Pimpinan)
+        // Berkas proposal masuk yang sedang dalam antrean telaah Wabup
+        $pendingProposals = Proposal::with(['user.profile', 'category', 'latestVersion'])
             ->where('status', 'diajukan')
-            ->waitingDisposition()
             ->orderByDeadline('asc')
             ->latest('tanggal_kirim')
             ->get();
 
-        // Proposal yang telah selesai dicatat lembar disposisinya dan diteruskan ke Wabup
-        $completedDispositions = Proposal::with(['user.profile', 'category', 'latestVersion', 'versions.disposition.petugas'])
-            ->where('status', 'diajukan')
-            ->disposed()
-            ->orderByDeadline('asc')
-            ->latest('tanggal_kirim')
-            ->take(10)
-            ->get();
-
-        $proposals = Proposal::with(['user.profile', 'category', 'latestVersion', 'versions.disposition.petugas'])
+        $proposals = Proposal::with(['user.profile', 'category', 'latestVersion'])
             ->latest()
             ->take(10)
             ->get();
 
         $stats = [
             'total_proposal' => Proposal::count(),
-            'menunggu_disposisi' => Proposal::where('status', 'diajukan')->waitingDisposition()->count(),
-            'disposisi_selesai' => Proposal::where('status', 'diajukan')->disposed()->count(),
+            'menunggu_telaah' => Proposal::where('status', 'diajukan')->count(),
             'disetujui' => Proposal::where('status', 'disetujui')->count(),
             'perlu_perbaikan' => Proposal::where('status', 'perlu_perbaikan')->count(),
+            'ditolak' => Proposal::where('status', 'ditolak')->count(),
             'total_pengusul' => User::where('role', 'pengusul')->count(),
             'total_anggaran_semua' => Proposal::sum('total_anggaran'),
             'total_anggaran_disetujui' => Proposal::where('status', 'disetujui')->sum('total_anggaran'),
@@ -110,6 +100,6 @@ class DashboardController extends Controller
             ->take(10)
             ->get();
 
-        return view('dashboard', compact('user', 'waitingDispositions', 'completedDispositions', 'proposals', 'stats', 'categories', 'recentActivities'));
+        return view('dashboard', compact('user', 'pendingProposals', 'proposals', 'stats', 'categories', 'recentActivities'));
     }
 }

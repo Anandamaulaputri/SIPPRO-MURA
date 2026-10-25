@@ -21,7 +21,6 @@ class ProposalController extends Controller
         $user = Auth::user();
         $status = $request->input('status');
         $search = $request->input('search');
-        $disposisi = $request->input('disposisi');
 
         $query = Proposal::with([
             'category',
@@ -40,12 +39,6 @@ class ProposalController extends Controller
             $query->where('status', $status);
         }
 
-        if ($disposisi === 'menunggu') {
-            $query->where('status', 'diajukan')->waitingDisposition();
-        } elseif ($disposisi === 'selesai') {
-            $query->where('status', 'diajukan')->disposed();
-        }
-
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('judul_proposal', 'like', "%{$search}%")
@@ -56,7 +49,7 @@ class ProposalController extends Controller
         $proposals = $query->latest()->paginate(10)->withQueryString();
         $categories = Category::all();
 
-        return view('proposals.index', compact('proposals', 'categories', 'status', 'search', 'disposisi'));
+        return view('proposals.index', compact('proposals', 'categories', 'status', 'search'));
     }
 
     public function create()
@@ -585,12 +578,7 @@ class ProposalController extends Controller
             abort(403, 'Hak untuk menyetujui, menolak, atau meminta perbaikan proposal secara eksklusif merupakan wewenang Wakil Bupati.');
         }
 
-        $proposal = Proposal::with(['versions.disposition'])->findOrFail($id);
-
-        // Gatekeeper Disposisi: Proposal yang belum memiliki disposisi selesai pada versi aktif dilarang ditelaah
-        if (! $proposal->isDisposed()) {
-            abort(403, 'Proposal ini belum dapat ditelaah karena belum memiliki disposisi administratif dari Tata Usaha Pimpinan (Pak Haziral).');
-        }
+        $proposal = Proposal::findOrFail($id);
 
         $validated = $request->validate([
             'keputusan' => ['required', 'in:disetujui,perlu_perbaikan,ditolak'],

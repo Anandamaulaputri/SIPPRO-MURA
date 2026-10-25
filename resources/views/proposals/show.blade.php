@@ -507,24 +507,18 @@
                 </div>
             </div>
 
-            <!-- Data Disposisi Tata Usaha Pimpinan (Pak Haziral) -->
-            <div class="border-t border-[#2A2A2A] pt-6">
-                <div class="flex items-center justify-between mb-4">
-                    <h2 class="text-sm font-bold text-[#E6C65C] flex items-center space-x-2">
-                        <span>📑 Data Disposisi Tata Usaha Pimpinan</span>
-                    </h2>
-                    @if($displayedDisposition)
-                        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-950/60 text-blue-400 border border-blue-500/30">
-                            ✓ Disposisi Fisik Selesai
+            <!-- Data Disposisi Tata Usaha Pimpinan (Arsip Riwayat jika ada) -->
+            @if($displayedDisposition)
+                <div class="border-t border-[#2A2A2A] pt-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-sm font-bold text-[#A3A3A3] flex items-center space-x-2">
+                            <span>📑 Data Disposisi Tata Usaha Pimpinan (Arsip Riwayat)</span>
+                        </h2>
+                        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#1F1F1F] text-[#A3A3A3] border border-[#2A2A2A]">
+                            ✓ Tersimpan di Arsip
                         </span>
-                    @else
-                        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-950/60 text-amber-400 border border-amber-500/30">
-                            ⏳ Menunggu Disposisi
-                        </span>
-                    @endif
-                </div>
+                    </div>
 
-                @if($displayedDisposition)
                     <div class="p-5 sm:p-6 rounded-2xl bg-[#181818] border border-[#2A2A2A] space-y-4">
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
                             <div class="bg-[#0B0B0B] p-3 rounded-xl border border-[#222]">
@@ -550,7 +544,7 @@
                         </div>
 
                         <div>
-                            <span class="text-[#A3A3A3] text-xs font-bold block mb-1.5">Instruksi / Catatan Disposisi Pak Haziral:</span>
+                            <span class="text-[#A3A3A3] text-xs font-bold block mb-1.5">Instruksi / Catatan Disposisi:</span>
                             <div class="p-3.5 rounded-xl bg-[#0B0B0B] border border-[#2A2A2A] text-white text-xs leading-relaxed italic">
                                 "{{ $displayedDisposition->catatan_disposisi ?? 'Diteruskan ke meja Wakil Bupati Murung Raya untuk ditelaah dan diberikan keputusan.' }}"
                             </div>
@@ -572,18 +566,8 @@
                             </div>
                         @endif
                     </div>
-                @else
-                    <div class="p-5 rounded-2xl bg-[#181818] border border-amber-500/30 text-xs flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                        <div class="flex items-center space-x-3">
-                            <span class="text-2xl">⏳</span>
-                            <div>
-                                <h4 class="font-bold text-amber-400 text-sm">Menunggu Disposisi Tata Usaha Pimpinan</h4>
-                                <p class="text-[#A3A3A3] mt-0.5">Berkas usulan (Versi {{ $displayedVersion->nomor_versi }}.0) sedang dalam proses administrasi lembar disposisi fisik oleh <strong>Pak Haziral (KSB. Tata Usaha Pimpinan)</strong> sebelum diteruskan ke meja Wakil Bupati.</p>
-                            </div>
-                        </div>
-                    </div>
-                @endif
-            </div>
+                </div>
+            @endif
 
             <!-- Pengaturan Batas Waktu Tindak Lanjut oleh Admin -->
             @if(auth()->user()->isAdmin())
@@ -613,114 +597,6 @@
                         <button type="submit" class="px-4 py-2 bg-[#D4AF37] hover:bg-[#E6C65C] text-black font-bold rounded-xl text-xs shadow-sm transition-all hover:scale-105">
                             Simpan Batas Waktu
                         </button>
-                    </form>
-                </div>
-            @endif
-
-            <!-- Form Pencatatan Disposisi oleh Staf/Admin (Hanya Muncul untuk Admin saat status proposal Diajukan pada versi aktif) -->
-            @if(auth()->user()->isAdmin() && $proposal->status === 'diajukan' && $displayedVersion->id === $activeVersion->id)
-                <div class="border-t-2 border-amber-500/40 pt-6 bg-[#1A1813] p-6 sm:p-7 rounded-3xl border border-amber-500/30 shadow-xl">
-                    <div class="mb-5">
-                        <div class="flex items-center space-x-2 mb-1">
-                            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-500/20 text-amber-300 border border-amber-500/40">
-                                Meja Administrasi Staf
-                            </span>
-                        </div>
-                        <h2 class="text-base font-black text-white flex items-center space-x-2">
-                            <span>📝</span>
-                            <span>Pencatatan Lembar Disposisi Pak Haziral (KSB. TU Pimpinan)</span>
-                        </h2>
-                        <p class="text-xs text-[#A3A3A3] mt-1">
-                            Catat hasil tanda tangan dan arahan lembar disposisi fisik yang telah dilakukan oleh <strong>Pak Haziral, S.E.</strong> agar berkas proposal otomatis masuk ke antrean telaah Wakil Bupati.
-                        </p>
-                    </div>
-
-                    <form method="POST" action="{{ route('proposals.disposition', $proposal->id) }}" enctype="multipart/form-data" class="space-y-4">
-                        @csrf
-
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <!-- Nomor Surat Usulan Masuk -->
-                            <div>
-                                <label class="block text-xs font-bold uppercase tracking-wider text-[#A3A3A3] mb-1.5">Nomor Surat Masuk dari Pengusul</label>
-                                <input type="text" name="nomor_surat" value="{{ old('nomor_surat', $activeDisposition?->nomor_surat ?? $extractedNomorSurat) }}"
-                                       placeholder="Contoh: 045/KT-MURA/IX/2026"
-                                       class="w-full px-3.5 py-2.5 bg-[#0B0B0B] border border-[#2A2A2A] text-white placeholder-[#737373] rounded-xl text-xs focus:border-amber-400 focus:ring-1 focus:ring-amber-400 outline-none transition-all">
-                            </div>
-
-                            <!-- Tanggal Surat Masuk -->
-                            <div>
-                                <label class="block text-xs font-bold uppercase tracking-wider text-[#A3A3A3] mb-1.5">Tanggal Surat Pengusul</label>
-                                <input type="date" name="tanggal_surat" value="{{ old('tanggal_surat', $activeDisposition?->tanggal_surat?->format('Y-m-d') ?? ($proposal->tanggal_kirim ? $proposal->tanggal_kirim->format('Y-m-d') : date('Y-m-d'))) }}"
-                                       class="w-full px-3.5 py-2.5 bg-[#0B0B0B] border border-[#2A2A2A] text-white rounded-xl text-xs focus:border-amber-400 focus:ring-1 focus:ring-amber-400 outline-none transition-all">
-                            </div>
-
-                            <!-- Asal Surat -->
-                            <div>
-                                <label class="block text-xs font-bold uppercase tracking-wider text-[#A3A3A3] mb-1.5">Asal Surat / Lembaga Pengusul</label>
-                                <input type="text" name="asal_surat" value="{{ old('asal_surat', $activeDisposition?->asal_surat ?? ($proposal->user->profile->nama_lembaga ?? $proposal->user->name)) }}"
-                                       class="w-full px-3.5 py-2.5 bg-[#0B0B0B] border border-[#2A2A2A] text-white rounded-xl text-xs focus:border-amber-400 focus:ring-1 focus:ring-amber-400 outline-none transition-all">
-                            </div>
-
-                            <!-- Tujuan Disposisi -->
-                            <div>
-                                <label class="block text-xs font-bold uppercase tracking-wider text-[#A3A3A3] mb-1.5">Tujuan Arahan Disposisi *</label>
-                                <input type="text" name="tujuan_disposisi" value="{{ old('tujuan_disposisi', $activeDisposition?->tujuan_disposisi ?? 'Wakil Bupati Murung Raya') }}" required
-                                       class="w-full px-3.5 py-2.5 bg-[#0B0B0B] border border-[#2A2A2A] text-white rounded-xl text-xs focus:border-amber-400 focus:ring-1 focus:ring-amber-400 outline-none transition-all">
-                            </div>
-
-                            <!-- Tanggal Disposisi Fisik -->
-                            <div>
-                                <label class="block text-xs font-bold uppercase tracking-wider text-[#A3A3A3] mb-1.5">Tanggal Disposisi Pak Haziral *</label>
-                                <input type="date" name="tanggal_disposisi" value="{{ old('tanggal_disposisi', $activeDisposition?->tanggal_disposisi?->format('Y-m-d') ?? date('Y-m-d')) }}" required
-                                       class="w-full px-3.5 py-2.5 bg-[#0B0B0B] border border-[#2A2A2A] text-white rounded-xl text-xs focus:border-amber-400 focus:ring-1 focus:ring-amber-400 outline-none transition-all">
-                            </div>
-
-                            <!-- Unggah Bukti Scan Lembar Disposisi -->
-                            <div>
-                                <label class="block text-xs font-bold uppercase tracking-wider text-[#A3A3A3] mb-1.5">
-                                    Scan / Foto Lembar Disposisi Fisik
-                                    <span class="text-[10px] text-[#737373] font-normal lowercase">(opsional, PDF/JPG/PNG max 5MB)</span>
-                                </label>
-                                <input type="file" name="file_bukti_disposisi" accept=".pdf,.jpg,.jpeg,.png"
-                                       class="w-full px-3 py-2 bg-[#0B0B0B] border border-[#2A2A2A] text-white rounded-xl text-xs file:mr-3 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-[#1F1F1F] file:text-[#D4AF37] hover:file:bg-[#252525]">
-                                @if($activeDisposition?->file_bukti_disposisi)
-                                    <p class="text-[10px] text-emerald-400 mt-1">✓ File bukti saat ini: {{ basename($activeDisposition->file_bukti_disposisi) }}</p>
-                                @endif
-                            </div>
-
-                            <!-- Batas Waktu Tindak Lanjut Proposal -->
-                            <div class="sm:col-span-2">
-                                <label class="block text-xs font-bold uppercase tracking-wider text-amber-300 mb-1.5 flex items-center space-x-1.5">
-                                    <span>⏰ Batas Waktu Tindak Lanjut Proposal</span>
-                                    <span class="text-[10px] text-[#A3A3A3] font-normal lowercase">(target batas waktu telaah / penyelesaian oleh pemerintah daerah)</span>
-                                </label>
-                                <div class="flex items-center space-x-3">
-                                    <input type="date" name="batas_waktu" value="{{ old('batas_waktu', $proposal->batas_waktu?->format('Y-m-d')) }}"
-                                           class="w-full sm:w-64 px-3.5 py-2.5 bg-[#0B0B0B] border border-amber-500/40 text-white rounded-xl text-xs focus:border-amber-400 focus:ring-1 focus:ring-amber-400 outline-none transition-all">
-                                    @if($proposal->batas_waktu)
-                                        <span class="inline-flex items-center text-[10px] font-bold px-2.5 py-1 rounded-full border {{ $proposal->deadline_color }}">
-                                            {{ $proposal->deadline_label }}
-                                        </span>
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Catatan Arahan Disposisi -->
-                        <div>
-                            <label class="block text-xs font-bold uppercase tracking-wider text-[#A3A3A3] mb-1.5">Catatan / Arahan Disposisi Pak Haziral</label>
-                            <textarea name="catatan_disposisi" rows="3" placeholder="Tuliskan catatan disposisi, misalnya: Diteruskan ke meja Wakil Bupati untuk ditelaah kelayakan permohonan..."
-                                      class="w-full px-3.5 py-2.5 bg-[#0B0B0B] border border-[#2A2A2A] text-white placeholder-[#737373] rounded-xl text-xs focus:border-amber-400 focus:ring-1 focus:ring-amber-400 outline-none transition-all">{{ old('catatan_disposisi', $activeDisposition?->catatan_disposisi) }}</textarea>
-                        </div>
-
-                        <div class="flex flex-col sm:flex-row sm:items-center justify-between pt-2 gap-3">
-                            <span class="text-[11px] text-[#737373]">
-                                ℹ️ Disposisi fisik ditandatangani oleh Pak Haziral (KSB. TU Pimpinan) dan dicatat oleh staf: <strong>{{ auth()->user()->name }}</strong>.
-                            </span>
-                            <button type="submit" class="px-6 py-3 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black font-extrabold rounded-xl text-xs shadow-md transition-all hover:scale-105 shrink-0">
-                                {{ $activeDisposition ? 'Perbarui Data Disposisi' : 'Simpan & Selesaikan Disposisi (Teruskan ke Wabup) →' }}
-                            </button>
-                        </div>
                     </form>
                 </div>
             @endif
@@ -779,21 +655,12 @@
                                 Buka Versi Aktif &rarr;
                             </a>
                         </div>
-                    @elseif(! $proposal->isDisposed())
-                        <!-- Gatekeeper Disposisi: Belum disposisi fisik oleh Pak Haziral -->
-                        <div class="p-5 rounded-2xl bg-amber-950/30 border border-amber-500/40 text-xs text-amber-200 flex items-center space-x-3.5">
-                            <span class="text-2xl">⏳</span>
-                            <div>
-                                <h4 class="font-bold text-amber-400 text-sm">Menunggu Disposisi Administrasi TU Pimpinan</h4>
-                                <p class="text-[#A3A3A3] mt-0.5">Berkas usulan ini masih dalam proses penatausahaan lembar disposisi fisik oleh <strong>Pak Haziral (KSB. Tata Usaha Pimpinan)</strong>. Formulir telaah dan penetapan keputusan akan terbuka otomatis setelah lembar disposisi dicatat oleh staf administrasi.</p>
-                            </div>
-                        </div>
                     @elseif($proposal->status === 'perlu_perbaikan')
                         <div class="p-5 rounded-2xl bg-[#0B0B0B] border border-amber-500/30 text-xs flex items-center space-x-3.5">
                             <span class="text-2xl">⏳</span>
                             <div>
                                 <h4 class="font-bold text-amber-400 text-sm">Menunggu Pengajuan Perbaikan Berkas</h4>
-                                <p class="text-[#A3A3A3] mt-0.5">Arahan perbaikan telah diterbitkan untuk pemohon. Formulir keputusan akan kembali aktif setelah pemohon mengirimkan perbaikan usulan revisi dan melalui proses disposisi ulang.</p>
+                                <p class="text-[#A3A3A3] mt-0.5">Arahan perbaikan telah diterbitkan untuk pemohon. Formulir keputusan akan kembali aktif setelah pemohon mengirimkan perbaikan usulan revisi.</p>
                             </div>
                         </div>
                     @else
